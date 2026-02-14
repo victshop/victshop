@@ -182,6 +182,7 @@
             updateTotalPrice(); showView('detail');
         }
 
+        // [장바구니 렌더링] 수량 조절 버튼 UI를 명시적으로 추가했습니다.
         function renderCart() {
             const container = document.getElementById('cart-items');
             if(cart.length === 0) { container.innerHTML = '<p class="text-center py-20 text-gray-400 font-bold italic">Cart is empty.</p>'; document.getElementById('cart-total').innerText = '0 KRW'; return; }
@@ -208,6 +209,7 @@
             document.getElementById('cart-total').innerText = total.toLocaleString() + ' KRW';
         }
 
+        // 장바구니 내 수량 변경 함수
         function updateCartQty(index, delta) {
             cart[index].qty = Math.max(1, cart[index].qty + delta);
             localStorage.setItem('victshop_cart', JSON.stringify(cart));

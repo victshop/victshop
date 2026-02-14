@@ -3,102 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VICT SHOP</title>
+    <title>V shop</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
     <style>
-        body { font-family: 'Pretendard', sans-serif; word-break: keep-all; }
+        body { font-family: 'Pretendard', sans-serif; background-color: #fafaf9; color: #1c1c1b; word-break: keep-all; }
         .hidden { display: none; }
-        .hero-gradient { background: linear-gradient(to bottom, #f9f9f9, #ffffff); }
-        .product-card img { transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
-        .product-card:hover img { transform: scale(1.05); }
-        
-        /* 드롭다운 네비게이션 스타일 */
+        .hero-section { background-color: #f3f4f6; } /* 소프트 모노톤 배경 */
+        .product-card { background: white; border-radius: 24px; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); border: 1px solid #f1f1f0; }
+        .product-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.03); border-color: #e5e7eb; }
         .nav-item:hover .dropdown-menu { display: block; }
-        .dropdown-menu { display: none; position: absolute; top: 100%; left: 0; background: white; min-width: 180px; box-shadow: 0 15px 30px -5px rgba(0,0,0,0.1); border: 1px solid #f3f4f6; z-index: 50; }
-        .dropdown-item:hover { background-color: #f9fafb; color: #000; }
-        
+        .dropdown-menu { display: none; position: absolute; top: 100%; left: 0; background: white; min-width: 200px; padding: 12px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); z-index: 100; border: 1px solid #f3f4f6; }
+        .dropdown-item:hover { color: #000; background-color: #f9fafb; border-radius: 8px; }
+        .top5-badge { background: #fee2e2; color: #ef4444; font-size: 9px; padding: 2px 8px; border-radius: 10px; font-weight: 800; letter-spacing: 0.05em; }
         ::-webkit-scrollbar { display: none; }
     </style>
 </head>
-<body class="bg-white text-gray-900">
-    <header class="sticky top-0 bg-white/95 backdrop-blur-md z-[100] border-b border-gray-100">
-        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-            <h1 class="text-2xl font-black tracking-tighter cursor-pointer" onclick="location.reload()">VICT SHOP</h1>
-            <div class="flex items-center gap-6 text-[11px] font-bold uppercase tracking-widest text-gray-400">
+<body>
+    <header class="sticky top-0 bg-white/80 backdrop-blur-xl z-[150] border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-8 h-24 flex items-center justify-between">
+            <h1 class="text-3xl font-black tracking-tighter cursor-pointer" onclick="location.href='/'">V shop</h1>
+            <div class="flex items-center gap-8 text-[11px] font-bold uppercase tracking-[0.2em] text-gray-400">
                 <div id="user-info" class="hidden text-black font-black"></div>
-                <button id="login-btn" onclick="showView('login')">Login</button>
+                <button id="login-btn" onclick="showView('login')">Sign In</button>
                 <button id="logout-btn" class="hidden" onclick="handleLogout()">Logout</button>
             </div>
         </div>
         
-        <nav class="max-w-7xl mx-auto px-6 border-t border-gray-50 flex gap-8 items-center h-14 overflow-visible">
-            <button class="text-[13px] font-bold text-gray-400 hover:text-black tracking-tight" onclick="filterProducts('category', 'ALL')">BEST 30</button>
-            <div id="main-nav" class="flex gap-8 h-full items-center">
+        <nav class="max-w-7xl mx-auto px-8 flex gap-10 items-center h-12 overflow-visible border-t border-gray-50">
+            <button class="text-[12px] font-bold text-black border-b-2 border-black h-full px-2" onclick="showMain()">HOME</button>
+            <div id="main-nav" class="flex gap-10 h-full items-center text-gray-400 font-medium">
                 </div>
         </nav>
     </header>
 
-    <section id="shop-view">
-        <div class="hero-gradient py-28 px-6 mb-12">
-            <div class="max-w-7xl mx-auto text-center">
-                <span class="text-[10px] font-bold tracking-[0.4em] uppercase text-gray-400 mb-6 block">Premium Selection</span>
-                <h2 class="text-4xl md:text-6xl font-black tracking-tighter mb-8 leading-tight italic">EVERYTHING YOU NEED,<br>JUST FOR YOU.</h2>
-                <p class="text-gray-500 text-sm md:text-base max-w-lg mx-auto font-medium leading-relaxed">
-                    VICT SHOP이 엄선한 프리미엄 가전을 특별한 혜택으로 만나보세요.
+    <section id="home-view">
+        <div class="hero-section py-32 px-8">
+            <div class="max-w-7xl mx-auto flex flex-col items-center text-center">
+                <p class="text-[10px] font-black tracking-[0.5em] text-gray-400 mb-6 uppercase">Selected by Seungjo</p>
+                <h2 class="text-5xl md:text-7xl font-black tracking-tighter mb-10 leading-[1.1]">
+                    ESSENTIALS FOR<br><span class="text-gray-400 italic font-medium">MODERN LIFE.</span>
+                </h2>
+                <div class="h-[1px] w-20 bg-gray-200 mb-10"></div>
+                <p class="text-gray-400 text-sm max-w-md leading-relaxed font-medium">
+                    V shop이 제안하는 프리미엄 가전 컬렉션.<br>엄선된 TOP 5 아이템을 지금 확인해보세요.
                 </p>
             </div>
         </div>
 
-        <div class="max-w-7xl mx-auto px-6 pb-32">
-            <div id="product-container" class="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-20">
-                <p class="col-span-full text-center text-gray-300 py-20 italic uppercase tracking-widest">Loading Collection...</p>
+        <div class="max-w-7xl mx-auto px-8 py-24">
+            <div class="flex justify-between items-end mb-16">
+                <h3 class="text-2xl font-black tracking-tighter italic">V shop's TOP 5</h3>
+                <p class="text-[11px] font-bold text-gray-300 uppercase tracking-widest">Editor's Selection</p>
+            </div>
+            <div id="top5-container" class="grid grid-cols-1 md:grid-cols-5 gap-8">
+                </div>
+        </div>
+    </section>
+
+    <section id="category-view" class="hidden py-24 px-8 max-w-7xl mx-auto">
+        <div class="mb-16">
+            <h2 id="category-title" class="text-4xl font-black tracking-tighter uppercase italic">CATEGORY</h2>
+            <p id="category-desc" class="text-gray-400 text-sm mt-2 font-medium">EXPLORE ALL PRODUCTS</p>
+        </div>
+        <div id="product-container" class="grid grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-20">
+            </div>
+    </section>
+
+    <section id="login-view" class="hidden min-h-[70vh] flex items-center justify-center p-8">
+        <div class="w-full max-w-sm space-y-12">
+            <div class="text-center">
+                <h2 class="text-4xl font-black tracking-tighter italic">V shop</h2>
+                <p class="text-[10px] font-bold text-gray-300 mt-2 tracking-widest uppercase">Member Service</p>
+            </div>
+            <div class="space-y-6">
+                <input type="text" id="login-id" placeholder="ID" class="w-full bg-transparent border-b border-gray-200 py-4 outline-none focus:border-black text-sm transition-all">
+                <input type="password" id="login-pw" placeholder="PASSWORD" class="w-full bg-transparent border-b border-gray-200 py-4 outline-none focus:border-black text-sm transition-all">
+                <button onclick="handleLogin()" class="w-full bg-black text-white py-5 text-[11px] font-black tracking-[0.2em] rounded-full mt-6">SIGN IN</button>
             </div>
         </div>
     </section>
 
-    <section id="login-view" class="hidden min-h-[70vh] flex items-center justify-center p-6">
-        <div class="w-full max-w-sm space-y-10 text-center">
-            <h2 class="text-3xl font-black tracking-tighter italic">SIGN IN</h2>
-            <div class="space-y-4">
-                <input type="text" id="login-id" placeholder="ID" class="w-full border-b border-gray-200 py-4 outline-none focus:border-black text-sm">
-                <input type="password" id="login-pw" placeholder="PASSWORD" class="w-full border-b border-gray-200 py-4 outline-none focus:border-black text-sm">
-                <button onclick="handleLogin()" class="w-full bg-black text-white py-5 text-xs font-bold tracking-widest mt-6">SIGN IN</button>
-            </div>
-        </div>
-    </section>
-
-    <div id="order-modal" class="fixed inset-0 bg-black/80 hidden z-[200] flex items-center justify-center p-6">
-        <div class="bg-white w-full max-w-md p-10 rounded-2xl">
+    <div id="order-modal" class="fixed inset-0 bg-black/60 hidden z-[200] flex items-center justify-center p-6 backdrop-blur-sm">
+        <div class="bg-white w-full max-w-md p-12 rounded-[32px] shadow-2xl">
             <h2 id="modal-product-name" class="text-2xl font-black tracking-tighter mb-8 italic">ORDER</h2>
             <div class="space-y-6">
-                <div>
-                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Shipping Address</label>
-                    <input type="text" id="order-address" placeholder="배송지 주소를 입력해 주세요" class="w-full border-b border-gray-100 py-3 outline-none focus:border-black text-sm transition-all">
-                </div>
-                <div>
-                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Message</label>
-                    <input type="text" id="order-request" placeholder="배송 요청사항 (선택)" class="w-full border-b border-gray-100 py-3 outline-none focus:border-black text-sm transition-all">
-                </div>
-                <div class="bg-gray-50 p-5 rounded-xl text-[10px] text-gray-400 italic">
-                    주문자: <span id="info-name" class="text-black font-bold"></span> / 연락처: <span id="info-phone" class="text-black font-bold"></span>
+                <input type="text" id="order-address" placeholder="SHIPPING ADDRESS" class="w-full border-b border-gray-100 py-3 outline-none focus:border-black text-sm">
+                <input type="text" id="order-request" placeholder="MESSAGE" class="w-full border-b border-gray-100 py-3 outline-none focus:border-black text-sm">
+                <div class="bg-stone-50 p-6 rounded-2xl text-[10px] text-stone-400 italic">
+                    BUYER: <span id="info-name" class="text-black font-bold"></span> / TEL: <span id="info-phone" class="text-black font-bold"></span>
                 </div>
             </div>
             <div class="flex gap-3 mt-12">
-                <button onclick="closeOrderModal()" class="flex-1 py-5 border border-gray-100 text-[11px] font-bold uppercase tracking-widest">Close</button>
-                <button onclick="submitOrder()" id="submit-btn" class="flex-1 bg-black text-white py-5 text-[11px] font-bold uppercase tracking-widest">Confirm Order</button>
+                <button onclick="closeOrderModal()" class="flex-1 py-5 border border-gray-100 text-[11px] font-bold uppercase rounded-full">Close</button>
+                <button onclick="submitOrder()" id="submit-btn" class="flex-1 bg-black text-white py-5 text-[11px] font-black uppercase rounded-full">Confirm Order</button>
             </div>
         </div>
     </div>
 
-    <footer class="border-t border-gray-50 py-32 text-center text-[11px] text-gray-400 tracking-widest uppercase font-medium">
-        <p class="font-black text-black mb-8 italic text-2xl tracking-tighter">VICT SHOP</p>
-        <div class="space-y-2">
+    <footer class="border-t border-gray-50 py-40 text-center text-[11px] text-gray-400 tracking-widest uppercase font-medium">
+        <p class="font-black text-black mb-10 italic text-3xl tracking-tighter">V shop</p>
+        <div class="space-y-2 opacity-60">
             <p>Representative: YOU SUNG JO (유승조)</p>
             <p>Contact: 010-6666-5950</p>
             <p>Email: victbiz77@gmail.com</p>
         </div>
-        <p class="mt-16 opacity-30 text-[9px]">© 2026 VICT SHOP. ALL RIGHTS RESERVED.</p>
+        <p class="mt-20 opacity-20 text-[9px]">© 2026 V shop. ALL RIGHTS RESERVED.</p>
     </footer>
 
     <script>
@@ -116,6 +126,7 @@
                 const response = await fetch(`${WEB_APP_URL}?action=getProducts`);
                 allProducts = await response.json();
                 
+                // [1] 네비게이션 생성 로직
                 const navData = {};
                 allProducts.forEach(p => {
                     if(!p.카테고리) return;
@@ -125,12 +136,12 @@
 
                 document.getElementById('main-nav').innerHTML = Object.keys(navData).map(cat => `
                     <div class="nav-item relative h-full flex items-center group">
-                        <button class="text-[13px] font-bold text-gray-400 hover:text-black tracking-tight h-full" onclick="filterProducts('category', '${cat}')">
+                        <button class="text-[12px] font-bold text-gray-400 hover:text-black tracking-tight" onclick="filterByCat('${cat}')">
                             ${cat.toUpperCase()}
                         </button>
-                        <div class="dropdown-menu pt-2">
+                        <div class="dropdown-menu">
                             ${Array.from(navData[cat]).map(sub => `
-                                <button class="dropdown-item block w-full text-left px-5 py-3 text-[12px] text-gray-500 font-medium" onclick="filterProducts('subcategory', '${sub}')">
+                                <button class="dropdown-item block w-full text-left px-4 py-3 text-[11px] text-gray-400 font-bold uppercase tracking-widest" onclick="filterBySub('${sub}')">
                                     ${sub}
                                 </button>
                             `).join('')}
@@ -138,40 +149,55 @@
                     </div>
                 `).join('');
                 
-                renderProducts(allProducts);
+                // [2] TOP 5 렌더링
+                const top5 = allProducts.filter(p => String(p.TOP5).toUpperCase() === 'Y').slice(0,5);
+                const top5Container = document.getElementById('top5-container');
+                top5Container.innerHTML = top5.map(p => createProductCard(p, true)).join('');
+
             } catch (e) { console.error(e); }
         }
 
-        function renderProducts(products) {
-            const container = document.getElementById('product-container');
-            container.innerHTML = products.map(p => `
-                <div class="product-card cursor-pointer group" onclick="openOrderModal('${p.상품명}')">
-                    <div class="aspect-[3/4] overflow-hidden bg-[#fbfbfb] mb-8">
-                        <img src="${p.이미지URL}" alt="${p.상품명}" class="w-full h-full object-cover">
+        function createProductCard(p, isTop5) {
+            return `
+                <div class="product-card group p-6 cursor-pointer" onclick="openOrderModal('${p.상품명}')">
+                    <div class="aspect-[3/4] overflow-hidden rounded-xl bg-gray-50 mb-8 relative">
+                        ${isTop5 ? '<span class="absolute top-4 left-4 z-10 top5-badge uppercase">Selected Item</span>' : ''}
+                        <img src="${p.이미지URL}" alt="${p.상품명}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
                     </div>
                     <div class="space-y-1">
-                        <span class="text-[9px] font-black text-gray-300 uppercase tracking-widest">${p.브랜드 || 'PREMIUM'}</span>
-                        <h3 class="text-[14px] font-bold tracking-tight text-gray-800">${p.상품명}</h3>
-                        <p class="text-[16px] font-black pt-2">${Number(p.가격).toLocaleString()} KRW</p>
+                        <span class="text-[9px] font-black text-gray-300 uppercase tracking-widest">${p.브랜드 || 'V COLLECTION'}</span>
+                        <h3 class="text-[14px] font-bold tracking-tight text-gray-800 line-clamp-1">${p.상품명}</h3>
+                        <p class="text-[16px] font-black pt-3 text-black">${Number(p.가격).toLocaleString()} KRW</p>
                     </div>
                 </div>
-            `).join('');
+            `;
         }
 
-        function filterProducts(type, value) {
-            let filtered = allProducts;
-            if(value !== 'ALL') {
-                filtered = allProducts.filter(p => type === 'category' ? p.카테고리 === value : p.서브카테고리 === value);
-            }
-            renderProducts(filtered);
-            showView('shop');
+        function filterByCat(cat) {
+            const filtered = allProducts.filter(p => p.카테고리 === cat);
+            renderCategoryView(cat, filtered);
         }
+
+        function filterBySub(sub) {
+            const filtered = allProducts.filter(p => p.서브카테고리 === sub);
+            renderCategoryView(sub, filtered);
+        }
+
+        function renderCategoryView(title, products) {
+            document.getElementById('category-title').innerText = title;
+            document.getElementById('product-container').innerHTML = products.map(p => createProductCard(p, false)).join('');
+            showView('category');
+        }
+
+        function showMain() { showView('home'); }
 
         function showView(view) {
-            ['shop-view', 'login-view'].forEach(id => document.getElementById(id).classList.add('hidden'));
+            ['home-view', 'category-view', 'login-view'].forEach(id => document.getElementById(id).classList.add('hidden'));
             document.getElementById(view + '-view').classList.remove('hidden');
+            window.scrollTo(0,0);
         }
 
+        // 기존 로그인/주문 로직 유지
         async function handleLogin() {
             const id = document.getElementById('login-id').value;
             const pw = document.getElementById('login-pw').value;
@@ -202,9 +228,10 @@
             document.getElementById('info-name').innerText = currentUser.name;
             document.getElementById('info-phone').innerText = currentUser.phone || currentUser.id;
             document.getElementById('order-modal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
         }
 
-        function closeOrderModal() { document.getElementById('order-modal').classList.add('hidden'); }
+        function closeOrderModal() { document.getElementById('order-modal').classList.add('hidden'); document.body.style.overflow = 'auto'; }
 
         async function submitOrder() {
             const address = document.getElementById('order-address').value;
@@ -212,13 +239,11 @@
             const btn = document.getElementById('submit-btn');
             btn.disabled = true; btn.innerText = 'PROCESSING...';
             const orderData = { 
-                product: currentProduct, name: currentUser.name, 
-                phone: currentUser.phone || currentUser.id, 
+                product: currentProduct, name: currentUser.name, phone: currentUser.phone || currentUser.id, 
                 address: address, request: document.getElementById('order-request').value 
             };
             await fetch(`${WEB_APP_URL}?action=addOrder&data=${encodeURIComponent(JSON.stringify(orderData))}`);
-            alert('주문 완료');
-            location.reload();
+            alert('주문 완료'); location.reload();
         }
 
         init();

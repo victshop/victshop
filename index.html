@@ -329,13 +329,18 @@
             const btn = document.getElementById('final-submit-btn'); btn.disabled = true; btn.innerText = 'PROCESSING...';
             const productStr = orderType === 'single' ? `${currentProductObj.상품명} (${currentQty}개)` : cart.map(c => `${c.상품명} (${c.qty}개)`).join(', ');
             
-            // 시트 헤더 이름과 100% 일치하도록 데이터 패키징
+            // 모든 정보를 개별 키값으로 묶어 전송 (GAS와 일치)
             const finalData = { 
                 "상품명": productStr, 
                 "주문자명": document.getElementById('chk-orderer-name').value, 
-                "연락처": document.getElementById('chk-orderer-phone').value, 
-                "주소": `[${document.getElementById('chk-postcode').value}] ${document.getElementById('chk-address').value} ${document.getElementById('chk-address-detail').value}`, 
-                "배송 요청사항": document.getElementById('chk-request').value 
+                "주문자연락처": document.getElementById('chk-orderer-phone').value,
+                "수령인명": document.getElementById('chk-name').value,
+                "수령인연락처": document.getElementById('chk-phone').value,
+                "우편번호": document.getElementById('chk-postcode').value,
+                "기본주소": document.getElementById('chk-address').value,
+                "상세주소": document.getElementById('chk-address-detail').value,
+                "배송메시지": document.getElementById('chk-request').value,
+                "총금액": document.getElementById('chk-final-total').innerText
             };
             
             await fetch(`${WEB_APP_URL}?action=addOrder&data=${encodeURIComponent(JSON.stringify(finalData))}`);

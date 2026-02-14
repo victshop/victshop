@@ -18,10 +18,8 @@
         .price-text { font-size: 16px; font-weight: 800; color: #000; margin-top: 8px; }
         .dropdown-menu { display: none; position: absolute; top: 100%; left: 0; background: #111; min-width: 200px; padding: 10px 0; z-index: 100; border: 1px solid #333; }
         .nav-item:hover .dropdown-menu { display: block; }
-        .qty-btn { width: 32px; height: 32px; border: 1px solid #e5e7eb; display: flex; align-items: center; justify-content: center; font-weight: bold; }
-        /* 체크아웃 전용 스타일 */
+        .qty-btn { width: 32px; height: 32px; border: 1px solid #e5e7eb; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; }
         .section-title { font-size: 18px; font-weight: 800; border-bottom: 2px solid #000; padding-bottom: 12px; margin-bottom: 24px; text-transform: uppercase; }
-        .form-label { font-size: 12px; font-weight: 700; color: #666; width: 120px; display: inline-block; }
         .form-input { border-bottom: 1px solid #eee; padding: 10px 0; outline: none; width: 100%; font-size: 14px; }
         .form-input:focus { border-bottom: 1px solid #000; }
         ::-webkit-scrollbar { display: none; }
@@ -48,7 +46,7 @@
         <div class="bg-stone-50 py-32 border-b border-gray-100 text-center">
             <p class="text-[10px] font-black tracking-[0.4em] text-stone-400 mb-6 uppercase">Selected by Seungjo</p>
             <h2 class="text-5xl md:text-7xl font-black tracking-tighter mb-10 leading-none">ESSENTIALS FOR<br><span class="italic text-stone-300">MODERN LIFE.</span></h2>
-            <p class="text-stone-500 text-sm max-w-sm mx-auto font-medium leading-relaxed">V shop이 큐레이션한 프리미엄 컬렉션.</p>
+            <p class="text-stone-500 text-sm max-w-sm mx-auto font-medium">V shop이 제안하는 프리미엄 컬렉션.</p>
         </div>
         <div class="max-w-7xl mx-auto px-6 py-24">
             <div class="flex items-center justify-between mb-16"><h3 class="text-3xl font-black tracking-tighter italic">TOP 5</h3><span class="h-[1px] flex-1 mx-8 bg-gray-100"></span></div>
@@ -92,8 +90,11 @@
 
     <section id="cart-view" class="hidden py-24 px-6 max-w-4xl mx-auto text-center">
         <h2 class="text-4xl font-black tracking-tighter uppercase italic mb-16">CART</h2>
-        <div id="cart-items" class="space-y-6 text-left mb-12"></div>
-        <div class="border-t-2 border-black pt-8 flex justify-between items-end mb-12"><span class="text-sm font-black text-gray-400 uppercase tracking-widest">Total</span><span id="cart-total" class="text-3xl font-black">0 KRW</span></div>
+        <div id="cart-items" class="space-y-8 text-left mb-12"></div>
+        <div class="border-t-2 border-black pt-8 flex justify-between items-end mb-12">
+            <span class="text-sm font-black text-gray-400 uppercase tracking-widest">Total Amount</span>
+            <span id="cart-total" class="text-3xl font-black">0 KRW</span>
+        </div>
         <div class="grid grid-cols-2 gap-4">
             <button onclick="showMain()" class="border-2 border-black py-5 text-[11px] font-black tracking-widest uppercase hover:bg-gray-50">Keep Shopping</button>
             <button id="cart-order-btn" onclick="goToCheckout('cart')" class="bg-black text-white py-5 text-[11px] font-black tracking-widest uppercase">Checkout</button>
@@ -102,57 +103,30 @@
 
     <section id="checkout-view" class="hidden py-24 px-6 max-w-5xl mx-auto">
         <div class="flex items-baseline justify-between mb-16">
-            <h2 class="text-4xl font-black tracking-tighter italic uppercase">주문/결제</h2>
-            <div class="text-[10px] font-bold text-gray-300 space-x-2">
-                <span>01 장바구니</span> <span class="text-black">> 02 주문/결제</span> > <span>03 주문완료</span>
-            </div>
+            <h2 class="text-4xl font-black tracking-tighter italic uppercase">Checkout</h2>
+            <div class="text-[10px] font-bold text-gray-300">01 CART <span class="text-black">> 02 CHECKOUT</span> > 03 COMPLETE</div>
         </div>
-
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-16">
             <div class="lg:col-span-2 space-y-16">
                 <div>
-                    <h3 class="section-title">배송지 정보</h3>
+                    <h3 class="section-title">Shipping Info</h3>
                     <div class="space-y-6">
-                        <div class="flex items-center"><span class="form-label text-red-500">받는분 *</span><input type="text" id="chk-name" class="form-input"></div>
-                        <div class="flex items-center"><span class="form-label text-red-500">연락처 *</span><input type="text" id="chk-phone" placeholder="010-0000-0000" class="form-input"></div>
-                        <div class="flex items-center"><span class="form-label text-red-500">주소 *</span><input type="text" id="chk-address" class="form-input"></div>
-                        <div class="flex items-center"><span class="form-label">배송 요청사항</span><input type="text" id="chk-request" placeholder="배송 메시지를 입력해 주세요" class="form-input"></div>
+                        <div class="flex items-center"><span class="text-[11px] font-bold text-gray-400 uppercase w-24">Name *</span><input type="text" id="chk-name" class="form-input"></div>
+                        <div class="flex items-center"><span class="text-[11px] font-bold text-gray-400 uppercase w-24">Phone *</span><input type="text" id="chk-phone" class="form-input"></div>
+                        <div class="flex items-center"><span class="text-[11px] font-bold text-gray-400 uppercase w-24">Address *</span><input type="text" id="chk-address" class="form-input"></div>
+                        <div class="flex items-center"><span class="text-[11px] font-bold text-gray-400 uppercase w-24">Message</span><input type="text" id="chk-request" class="form-input"></div>
                     </div>
                 </div>
-
-                <div>
-                    <h3 class="section-title">주문 상품</h3>
-                    <div id="checkout-items" class="space-y-4">
-                        </div>
-                </div>
-
-                <div>
-                    <h3 class="section-title">결제 수단</h3>
-                    <div class="grid grid-cols-3 gap-3">
-                        <button class="border-2 border-black py-4 text-[11px] font-black uppercase">무통장 입금</button>
-                        <button class="border border-gray-200 py-4 text-[11px] font-bold text-gray-400 uppercase opacity-50 cursor-not-allowed">신용카드</button>
-                        <button class="border border-gray-200 py-4 text-[11px] font-bold text-gray-400 uppercase opacity-50 cursor-not-allowed">카카오페이</button>
-                    </div>
-                    <p class="text-[10px] text-gray-400 mt-4 font-medium italic">* 현재는 무통장 입금만 가능합니다. 주문 완료 후 안내해 드립니다.</p>
-                </div>
+                <div><h3 class="section-title">Order Items</h3><div id="checkout-items" class="space-y-4"></div></div>
             </div>
-
             <div class="space-y-8">
                 <div class="border-2 border-black p-8 sticky top-24">
-                    <h3 class="text-lg font-black mb-8 italic">최종 결제 금액</h3>
-                    <div class="space-y-4 mb-8">
-                        <div class="flex justify-between text-sm font-bold"><span>총 상품 금액</span><span id="chk-total-items">0 KRW</span></div>
-                        <div class="flex justify-between text-sm font-bold"><span>배송비</span><span>무료</span></div>
-                    </div>
-                    <div class="border-t-2 border-black pt-6 flex justify-between items-end mb-10">
-                        <span class="text-sm font-black">결제 예정 금액</span>
-                        <span id="chk-final-total" class="text-2xl font-black text-red-600">0 KRW</span>
-                    </div>
-                    <button onclick="submitOrder()" id="final-submit-btn" class="w-full bg-black text-white py-5 text-[11px] font-black tracking-widest uppercase hover:bg-gray-800 transition">결제하기</button>
-                    <div class="mt-6 flex items-start gap-2">
-                        <input type="checkbox" id="chk-agree" class="mt-1">
-                        <label for="chk-agree" class="text-[10px] text-gray-400 font-medium">결제 및 배송 정보 수집에 동의하며, 위 주문 내용을 확인했습니다.</label>
-                    </div>
+                    <h3 class="text-lg font-black mb-8 italic">Final Total</h3>
+                    <div class="flex justify-between text-sm font-bold mb-4"><span>Subtotal</span><span id="chk-total-items"></span></div>
+                    <div class="flex justify-between text-sm font-bold mb-8"><span>Shipping</span><span>Free</span></div>
+                    <div class="border-t-2 border-black pt-6 flex justify-between items-end mb-10"><span class="text-sm font-black">Total</span><span id="chk-final-total" class="text-2xl font-black text-red-600"></span></div>
+                    <button onclick="submitOrder()" id="final-submit-btn" class="w-full bg-black text-white py-5 text-[11px] font-black tracking-widest uppercase">Place Order</button>
+                    <div class="mt-6 flex items-start gap-2"><input type="checkbox" id="chk-agree" class="mt-1"><label for="chk-agree" class="text-[10px] text-gray-400">결제 및 배송 정보 수집에 동의합니다.</label></div>
                 </div>
             </div>
         </div>
@@ -185,8 +159,7 @@
 
         async function loadProducts() {
             const res = await fetch(`${WEB_APP_URL}?action=getProducts`);
-            allProducts = await res.json();
-            renderNav();
+            allProducts = await res.json(); renderNav();
             const top5 = allProducts.filter(p => String(p.TOP5).toUpperCase() === 'Y').slice(0,5);
             document.getElementById('top5-container').innerHTML = top5.map(p => createProductCard(p)).join('');
         }
@@ -194,11 +167,7 @@
         function createProductCard(p) {
             return `<div class="product-card group cursor-pointer" onclick="showProductDetail('${p.상품명}')">
                 <div class="aspect-[1/1] overflow-hidden bg-gray-50 mb-8"><img src="${p.이미지URL}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"></div>
-                <div class="px-2">
-                    <p class="brand-text">${p.브랜드 || 'V COLLECTION'}</p>
-                    <h3 class="text-[14px] font-medium text-gray-500 line-clamp-1 mb-2">${p.상품명}</h3>
-                    <p class="price-text">${Number(p.가격).toLocaleString()} KRW</p>
-                </div>
+                <div class="px-2"><p class="brand-text">${p.브랜드 || 'V COLLECTION'}</p><h3 class="text-[14px] font-medium text-gray-500 line-clamp-1 mb-2">${p.상품명}</h3><p class="price-text">${Number(p.가격).toLocaleString()} KRW</p></div>
             </div>`;
         }
 
@@ -213,115 +182,89 @@
             updateTotalPrice(); showView('detail');
         }
 
-        // 체크아웃 이동 및 초기화
-        function goToCheckout(type) {
-            if(!currentUser) { showView('login'); return; }
-            orderType = type;
-            const container = document.getElementById('checkout-items');
-            let total = 0;
-
-            if(type === 'single') {
-                total = currentProductObj.가격 * currentQty;
-                container.innerHTML = `
-                    <div class="flex gap-4 items-center bg-gray-50 p-4">
-                        <img src="${currentProductObj.이미지URL}" class="w-16 h-16 object-cover">
-                        <div class="flex-1"><h4 class="text-sm font-bold">${currentProductObj.상품명}</h4><p class="text-[10px] text-gray-400 font-bold">${currentQty}개 / ${Number(currentProductObj.가격).toLocaleString()} KRW</p></div>
-                    </div>`;
-            } else {
-                if(cart.length === 0) return alert('장바구니가 비어 있습니다.');
-                container.innerHTML = cart.map(item => {
-                    total += (item.가격 * item.qty);
-                    return `
-                    <div class="flex gap-4 items-center bg-gray-50 p-4 border-b border-white">
-                        <img src="${item.이미지URL}" class="w-16 h-16 object-cover">
-                        <div class="flex-1"><h4 class="text-sm font-bold">${item.상품명}</h4><p class="text-[10px] text-gray-400 font-bold">${item.qty}개 / ${Number(item.가격).toLocaleString()} KRW</p></div>
-                    </div>`;
-                }).join('');
-            }
-            
-            document.getElementById('chk-total-items').innerText = total.toLocaleString() + ' KRW';
-            document.getElementById('chk-final-total').innerText = total.toLocaleString() + ' KRW';
-            
-            // 기존 사용자 정보 자동 채우기
-            document.getElementById('chk-name').value = currentUser.name || '';
-            document.getElementById('chk-phone').value = currentUser.phone || '';
-            
-            showView('checkout');
-        }
-
-        async function submitOrder() {
-            const name = document.getElementById('chk-name').value;
-            const phone = document.getElementById('chk-phone').value;
-            const address = document.getElementById('chk-address').value;
-            const agree = document.getElementById('chk-agree').checked;
-
-            if(!name || !phone || !address) return alert('필수 입력 정보를 모두 채워 주세요.');
-            if(!agree) return alert('주문 내용 확인 및 동의를 체크해 주세요.');
-
-            const btn = document.getElementById('final-submit-btn');
-            btn.disabled = true; btn.innerText = 'PROCESSING...';
-
-            let productStr = "";
-            if(orderType === 'single') {
-                productStr = `${currentProductObj.상품명} (${currentQty}개)`;
-            } else {
-                productStr = cart.map(c => `${c.상품명} (${c.qty}개)`).join(', ');
-            }
-
-            const orderData = { 
-                product: productStr, 
-                name: name, 
-                phone: phone, 
-                address: address, 
-                request: document.getElementById('chk-request').value 
-            };
-
-            await fetch(`${WEB_APP_URL}?action=addOrder&data=${encodeURIComponent(JSON.stringify(orderData))}`);
-            if(orderType === 'cart') { cart = []; localStorage.removeItem('victshop_cart'); }
-            alert('주문이 접수되었습니다. 승조님이 확인 후 개별 연락드립니다!');
-            location.reload();
-        }
-
-        // 뷰 전환
-        function showView(view) {
-            ['home-view', 'category-view', 'detail-view', 'cart-view', 'checkout-view', 'login-view', 'signup-view'].forEach(id => {
-                const el = document.getElementById(id);
-                if(el) el.classList.add('hidden');
-            });
-            const target = document.getElementById(view + '-view');
-            if(target) target.classList.remove('hidden');
-            if(view === 'cart') renderCart();
-            window.scrollTo(0,0);
-        }
-
-        // 기존 로직
-        function changeQty(val) { currentQty = Math.max(1, currentQty + val); document.getElementById('order-qty').value = currentQty; updateTotalPrice(); }
-        function updateTotalPrice() { document.getElementById('total-price-display').innerText = (currentProductObj.가격 * currentQty).toLocaleString() + ' KRW'; }
-        function updateCartBadge() { document.getElementById('cart-count').innerText = cart.length; }
-        function addToCart() { const item = { ...currentProductObj, qty: currentQty }; const existing = cart.find(c => c.상품명 === item.상품명); if(existing) { existing.qty += currentQty; } else { cart.push(item); } localStorage.setItem('victshop_cart', JSON.stringify(cart)); updateCartBadge(); if(confirm('장바구니에 담겼습니다. 장바구니로 이동할까요?')) { showView('cart'); } }
         function renderCart() {
             const container = document.getElementById('cart-items');
             if(cart.length === 0) { container.innerHTML = '<p class="text-center py-20 text-gray-400 font-bold italic">Cart is empty.</p>'; document.getElementById('cart-total').innerText = '0 KRW'; return; }
             let total = 0;
             container.innerHTML = cart.map((item, index) => {
                 total += (item.가격 * item.qty);
-                return `<div class="flex gap-6 items-center border-b pb-6"><img src="${item.imagesURL || item.이미지URL}" class="w-20 h-20 object-cover bg-gray-50"><div class="flex-1"><p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">${item.브랜드}</p><h4 class="text-sm font-bold mb-1">${item.상품명}</h4><p class="text-xs font-bold text-gray-900">${Number(item.가격).toLocaleString()} KRW / ${item.qty}개</p></div><button onclick="removeFromCart(${index})" class="text-[10px] font-black underline uppercase">Remove</button></div>`;
+                return `<div class="flex gap-6 items-center border-b border-gray-100 pb-8">
+                    <img src="${item.이미지URL}" class="w-24 h-24 object-cover bg-gray-50">
+                    <div class="flex-1">
+                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">${item.브랜드}</p>
+                        <h4 class="text-sm font-black mb-3">${item.상품명}</h4>
+                        <div class="flex items-center gap-4">
+                            <div class="flex items-center border border-gray-200">
+                                <button onclick="updateCartQty(${index}, -1)" class="w-8 h-8 flex items-center justify-center font-bold hover:bg-gray-50">-</button>
+                                <span class="w-10 text-center text-xs font-bold">${item.qty}</span>
+                                <button onclick="updateCartQty(${index}, 1)" class="w-8 h-8 flex items-center justify-center font-bold hover:bg-gray-50">+</button>
+                            </div>
+                            <span class="text-sm font-black text-black">${(item.가격 * item.qty).toLocaleString()} KRW</span>
+                        </div>
+                    </div>
+                    <button onclick="removeFromCart(${index})" class="text-[10px] font-black underline uppercase text-gray-300 hover:text-black">Remove</button>
+                </div>`;
             }).join('');
             document.getElementById('cart-total').innerText = total.toLocaleString() + ' KRW';
         }
-        function removeFromCart(index) { cart.splice(index, 1); localStorage.setItem('victshop_cart', JSON.stringify(cart)); updateCartBadge(); renderCart(); }
+
+        function updateCartQty(index, delta) {
+            cart[index].qty = Math.max(1, cart[index].qty + delta);
+            localStorage.setItem('victshop_cart', JSON.stringify(cart));
+            renderCart(); updateCartBadge();
+        }
+
+        function addToCart() {
+            const item = { ...currentProductObj, qty: currentQty };
+            const existing = cart.find(c => c.상품명 === item.상품명);
+            if(existing) { existing.qty += currentQty; } else { cart.push(item); }
+            localStorage.setItem('victshop_cart', JSON.stringify(cart));
+            updateCartBadge(); if(confirm('장바구니에 담겼습니다. 이동할까요?')) { showView('cart'); }
+        }
+
+        function goToCheckout(type) {
+            if(!currentUser) { showView('login'); return; }
+            orderType = type; const container = document.getElementById('checkout-items'); let total = 0;
+            if(type === 'single') {
+                total = currentProductObj.가격 * currentQty;
+                container.innerHTML = `<div class="flex gap-4 items-center bg-gray-50 p-4"><img src="${currentProductObj.이미지URL}" class="w-16 h-16 object-cover"><div class="flex-1"><h4 class="text-sm font-bold">${currentProductObj.상품명}</h4><p class="text-[10px] text-gray-400 font-bold">${currentQty}개 / ${Number(currentProductObj.가격).toLocaleString()} KRW</p></div></div>`;
+            } else {
+                if(cart.length === 0) return;
+                container.innerHTML = cart.map(item => { total += (item.가격 * item.qty); return `<div class="flex gap-4 items-center bg-gray-50 p-4 border-b border-white"><img src="${item.이미지URL}" class="w-16 h-16 object-cover"><div class="flex-1"><h4 class="text-sm font-bold">${item.상품명}</h4><p class="text-[10px] text-gray-400 font-bold">${item.qty}개 / ${Number(item.가격).toLocaleString()} KRW</p></div></div>`; }).join('');
+            }
+            document.getElementById('chk-total-items').innerText = total.toLocaleString() + ' KRW';
+            document.getElementById('chk-final-total').innerText = total.toLocaleString() + ' KRW';
+            document.getElementById('chk-name').value = currentUser.name || '';
+            document.getElementById('chk-phone').value = currentUser.phone || '';
+            showView('checkout');
+        }
+
+        async function submitOrder() {
+            if(!document.getElementById('chk-agree').checked) return alert('동의 체크가 필요합니다.');
+            const btn = document.getElementById('final-submit-btn'); btn.disabled = true; btn.innerText = 'PROCESSING...';
+            const orderData = { product: orderType === 'single' ? `${currentProductObj.상품명} (${currentQty}개)` : cart.map(c => `${c.상품명} (${c.qty}개)`).join(', '), name: document.getElementById('chk-name').value, phone: document.getElementById('chk-phone').value, address: document.getElementById('chk-address').value, request: document.getElementById('chk-request').value };
+            await fetch(`${WEB_APP_URL}?action=addOrder&data=${encodeURIComponent(JSON.stringify(orderData))}`);
+            if(orderType === 'cart') { cart = []; localStorage.removeItem('victshop_cart'); }
+            alert('주문 완료'); location.reload();
+        }
+
+        function showView(view) { ['home-view', 'category-view', 'detail-view', 'cart-view', 'checkout-view', 'login-view', 'signup-view'].forEach(id => document.getElementById(id).classList.add('hidden')); document.getElementById(view + '-view').classList.remove('hidden'); if(view === 'cart') renderCart(); window.scrollTo(0,0); }
+        function updateCartBadge() { document.getElementById('cart-count').innerText = cart.length; }
+        function removeFromCart(index) { cart.splice(index, 1); localStorage.setItem('victshop_cart', JSON.stringify(cart)); renderCart(); updateCartBadge(); }
+        function changeQty(val) { currentQty = Math.max(1, currentQty + val); document.getElementById('order-qty').value = currentQty; updateTotalPrice(); }
+        function updateTotalPrice() { document.getElementById('total-price-display').innerText = (currentProductObj.가격 * currentQty).toLocaleString() + ' KRW'; }
         function showMain() { showView('home'); }
         function renderNav() {
             const navData = {}; allProducts.forEach(p => { if(p.카테고리) { if(!navData[p.카테고리]) navData[p.카테고리] = new Set(); if(p.서브카테고리) navData[p.카테고리].add(p.서브카테고리); }});
             document.getElementById('main-nav').innerHTML = Object.keys(navData).map(cat => `<div class="nav-item relative h-full flex items-center group"><button class="text-[12px] font-bold nav-link h-full uppercase" onclick="filterByCat('${cat}')">${cat}</button><div class="dropdown-menu">${Array.from(navData[cat]).map(sub => `<button class="block w-full text-left px-6 py-3 text-[11px] text-white/60 hover:text-white font-bold uppercase" onclick="filterBySub('${sub}')">${sub}</button>`).join('')}</div></div>`).join('');
         }
-        function filterByCat(cat) { const filtered = allProducts.filter(p => p.카테고리 === cat); renderCategoryView(cat, filtered); }
-        function filterBySub(sub) { const filtered = allProducts.filter(p => p.서브카테고리 === sub); renderCategoryView(sub, filtered); }
+        function filterByCat(cat) { renderCategoryView(cat, allProducts.filter(p => p.카테고리 === cat)); }
+        function filterBySub(sub) { renderCategoryView(sub, allProducts.filter(p => p.서브카테고리 === sub)); }
         function renderCategoryView(title, products) { document.getElementById('category-title').innerText = title; document.getElementById('product-container').innerHTML = products.map(p => createProductCard(p)).join(''); showView('category'); }
-        async function handleLogin() { const id = document.getElementById('login-id').value; const res = await fetch(`${WEB_APP_URL}?action=login&data=${encodeURIComponent(JSON.stringify({id, pw: document.getElementById('login-pw').value}))}`); const data = await res.json(); if(data.result === 'success') { currentUser = { id, name: data.name, phone: data.phone }; localStorage.setItem('victshop_user', JSON.stringify(currentUser)); location.reload(); } else { alert('로그인 실패'); } }
-        async function handleSignup() { const data = { id: document.getElementById('reg-id').value, pw: document.getElementById('reg-pw').value, name: document.getElementById('reg-name').value, phone: document.getElementById('reg-phone').value }; const res = await fetch(`${WEB_APP_URL}?action=signup&data=${encodeURIComponent(JSON.stringify(data))}`); if(await res.text() === 'success') { alert('가입 완료'); showView('login'); } else { alert('ID 중복'); } }
-        function updateAuthUI() { if(currentUser) { document.getElementById('user-info').innerText = currentUser.name.toUpperCase(); document.getElementById('user-info').classList.remove('hidden'); document.getElementById('login-btn').classList.add('hidden'); document.getElementById('logout-btn').classList.remove('hidden'); } }
+        async function handleLogin() { const res = await fetch(`${WEB_APP_URL}?action=login&data=${encodeURIComponent(JSON.stringify({id: document.getElementById('login-id').value, pw: document.getElementById('login-pw').value}))}`); const data = await res.json(); if(data.result === 'success') { currentUser = { id: document.getElementById('login-id').value, name: data.name, phone: data.phone }; localStorage.setItem('victshop_user', JSON.stringify(currentUser)); location.reload(); } else { alert('로그인 실패'); } }
         function handleLogout() { localStorage.removeItem('victshop_user'); location.reload(); }
+        function updateAuthUI() { if(currentUser) { document.getElementById('user-info').innerText = currentUser.name.toUpperCase(); document.getElementById('user-info').classList.remove('hidden'); document.getElementById('login-btn').classList.add('hidden'); document.getElementById('logout-btn').classList.remove('hidden'); } }
+        async function handleSignup() { const data = { id: document.getElementById('reg-id').value, pw: document.getElementById('reg-pw').value, name: document.getElementById('reg-name').value, phone: document.getElementById('reg-phone').value }; const res = await fetch(`${WEB_APP_URL}?action=signup&data=${encodeURIComponent(JSON.stringify(data))}`); if(await res.text() === 'success') { alert('가입 완료'); showView('login'); } else { alert('ID 중복'); } }
         init();
     </script>
 </body>

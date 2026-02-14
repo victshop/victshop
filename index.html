@@ -9,25 +9,16 @@
     <style>
         body { font-family: 'Pretendard', sans-serif; background-color: #ffffff; color: #000; word-break: keep-all; }
         .hidden { display: none; }
-        
-        /* 신세계 스타일 블랙 헤더 */
         .ssg-header { background-color: #000000; color: #ffffff; }
         .nav-link { color: #ffffff; opacity: 0.7; transition: opacity 0.3s; }
         .nav-link:hover { opacity: 1; }
         .active-dot::after { content: ''; display: block; width: 4px; height: 4px; background: #fff; border-radius: 50%; margin: 4px auto 0; }
-
-        /* 상품 카드: 테두리 없는 갤러리 스타일 */
         .product-card { background: #ffffff; border: none !important; transition: transform 0.3s ease; }
         .brand-text { font-size: 14px; font-weight: 900; letter-spacing: -0.02em; text-transform: uppercase; margin-bottom: 4px; }
         .price-text { font-size: 16px; font-weight: 800; color: #000; margin-top: 8px; }
-        
-        /* 드롭다운 메뉴 */
         .dropdown-menu { display: none; position: absolute; top: 100%; left: 0; background: #111; min-width: 200px; padding: 10px 0; z-index: 100; border: 1px solid #333; }
         .nav-item:hover .dropdown-menu { display: block; }
-        
-        /* 수량 조절 */
         .qty-btn { width: 32px; height: 32px; border: 1px solid #e5e7eb; display: flex; align-items: center; justify-content: center; font-weight: bold; }
-        
         ::-webkit-scrollbar { display: none; }
     </style>
 </head>
@@ -37,6 +28,9 @@
             <h1 class="text-2xl font-black tracking-tighter cursor-pointer" onclick="location.reload()">V shop</h1>
             <div class="flex items-center gap-6 text-[11px] font-bold uppercase tracking-widest text-white/70">
                 <span id="user-info" class="hidden text-white font-black"></span>
+                <button onclick="showView('cart')" class="hover:text-white transition flex items-center gap-1">
+                    Cart (<span id="cart-count">0</span>)
+                </button>
                 <button id="login-btn" onclick="showView('login')" class="hover:text-white transition">Sign In</button>
                 <button id="logout-btn" class="hidden hover:text-white transition" onclick="handleLogout()">Logout</button>
             </div>
@@ -50,63 +44,57 @@
     <section id="home-view">
         <div class="bg-stone-50 py-32 border-b border-gray-100 text-center">
             <p class="text-[10px] font-black tracking-[0.4em] text-stone-400 mb-6 uppercase">Selected by Seungjo</p>
-            <h2 class="text-5xl md:text-7xl font-black tracking-tighter mb-10 leading-none">
-                ESSENTIALS FOR<br><span class="italic text-stone-300">MODERN LIFE.</span>
-            </h2>
-            <div class="h-[2px] w-20 bg-gray-900 mx-auto mb-10"></div>
-            <p class="text-stone-500 text-sm max-w-sm mx-auto font-medium">V shop이 제안하는 감각적인 라이프스타일 컬렉션.</p>
+            <h2 class="text-5xl md:text-7xl font-black tracking-tighter mb-10 leading-none">ESSENTIALS FOR<br><span class="italic text-stone-300">MODERN LIFE.</span></h2>
+            <p class="text-stone-500 text-sm max-w-sm mx-auto font-medium leading-relaxed">V shop이 큐레이션한 프리미엄 컬렉션.</p>
         </div>
         <div class="max-w-7xl mx-auto px-6 py-24">
-            <div class="flex items-center justify-between mb-16">
-                <h3 class="text-3xl font-black tracking-tighter italic">V shop's TOP 5</h3>
-                <span class="h-[1px] flex-1 mx-8 bg-gray-100"></span>
-            </div>
+            <div class="flex items-center justify-between mb-16"><h3 class="text-3xl font-black tracking-tighter italic">TOP 5</h3><span class="h-[1px] flex-1 mx-8 bg-gray-100"></span></div>
             <div id="top5-container" class="grid grid-cols-1 md:grid-cols-5 gap-10"></div>
         </div>
     </section>
 
     <section id="category-view" class="hidden py-24 px-6 max-w-7xl mx-auto">
-        <div class="text-center mb-20 border-b border-gray-100 pb-10">
-            <h2 id="category-title" class="text-4xl font-black tracking-tighter uppercase italic mb-4">CATEGORY</h2>
-            <p class="text-gray-400 text-[11px] font-bold tracking-[0.2em]">EXPLORE COLLECTION</p>
-        </div>
+        <h2 id="category-title" class="text-4xl font-black tracking-tighter uppercase italic text-center mb-20">CATEGORY</h2>
         <div id="product-container" class="grid grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-24"></div>
     </section>
 
     <section id="detail-view" class="hidden py-12 px-6 max-w-7xl mx-auto">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 mb-20">
-            <div class="bg-[#f9f9f9] flex items-center justify-center p-8 md:p-16">
-                <img id="detail-img" src="" class="max-w-full h-auto">
-            </div>
+            <div class="bg-[#f9f9f9] flex items-center justify-center p-8 md:p-16"><img id="detail-img" src="" class="max-w-full h-auto"></div>
             <div class="flex flex-col justify-center">
                 <p id="detail-brand" class="brand-text text-gray-400 mb-4"></p>
                 <h2 id="detail-name" class="text-3xl font-black tracking-tighter mb-4"></h2>
-                <div class="flex items-baseline gap-2 mb-8">
-                    <span id="detail-price-val" class="text-2xl font-black"></span>
-                    <span class="text-sm font-bold text-gray-400">KRW</span>
-                </div>
+                <div class="flex items-baseline gap-2 mb-8"><span id="detail-price-val" class="text-2xl font-black"></span><span class="text-sm font-bold text-gray-400">KRW</span></div>
                 <div class="border-t border-b border-gray-100 py-8 space-y-6">
-                    <div class="flex items-center justify-between">
-                        <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">Quantity</span>
+                    <div class="flex items-center justify-between"><span class="text-xs font-bold text-gray-400 uppercase tracking-widest">Quantity</span>
                         <div class="flex items-center border border-gray-200">
                             <button onclick="changeQty(-1)" class="qty-btn hover:bg-gray-50">-</button>
                             <input type="text" id="order-qty" value="1" readonly class="w-12 text-center text-sm font-bold">
                             <button onclick="changeQty(1)" class="qty-btn hover:bg-gray-50">+</button>
                         </div>
                     </div>
-                    <div class="flex items-center justify-between pt-4">
-                        <span class="text-xs font-bold text-gray-900 uppercase">Total Price</span>
-                        <span id="total-price-display" class="text-xl font-black"></span>
-                    </div>
+                    <div class="flex items-center justify-between pt-4"><span class="text-xs font-bold text-gray-900 uppercase">Total Price</span><span id="total-price-display" class="text-xl font-black"></span></div>
                 </div>
                 <div class="grid grid-cols-2 gap-3 pt-10">
-                    <button onclick="alert('장바구니에 담겼습니다.')" class="border-2 border-black py-5 text-[11px] font-black tracking-widest uppercase hover:bg-gray-50">Add to Cart</button>
-                    <button onclick="openOrderModal()" class="bg-black text-white py-5 text-[11px] font-black tracking-widest uppercase hover:bg-gray-800">Buy Now</button>
+                    <button onclick="addToCart()" class="border-2 border-black py-5 text-[11px] font-black tracking-widest uppercase hover:bg-gray-50">Add to Cart</button>
+                    <button onclick="openOrderModal('single')" class="bg-black text-white py-5 text-[11px] font-black tracking-widest uppercase hover:bg-gray-800">Buy Now</button>
                 </div>
             </div>
         </div>
-        <div id="detail-long-container" class="border-t border-gray-100 pt-20 max-w-4xl mx-auto">
-            <img id="detail-long-img" src="" class="w-full h-auto">
+        <div id="detail-long-container" class="border-t border-gray-100 pt-20 max-w-4xl mx-auto"><img id="detail-long-img" src="" class="w-full h-auto"></div>
+    </section>
+
+    <section id="cart-view" class="hidden py-24 px-6 max-w-4xl mx-auto text-center">
+        <h2 class="text-4xl font-black tracking-tighter uppercase italic mb-16">SHOPPING CART</h2>
+        <div id="cart-items" class="space-y-6 text-left mb-12">
+            </div>
+        <div class="border-t-2 border-black pt-8 flex justify-between items-end mb-12">
+            <span class="text-sm font-black text-gray-400 uppercase tracking-widest">Total Amount</span>
+            <span id="cart-total" class="text-3xl font-black">0 KRW</span>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+            <button onclick="showMain()" class="border-2 border-black py-5 text-[11px] font-black tracking-widest uppercase hover:bg-gray-50">Continue Shopping</button>
+            <button id="cart-order-btn" onclick="openOrderModal('cart')" class="bg-black text-white py-5 text-[11px] font-black tracking-widest uppercase disabled:opacity-30">Checkout</button>
         </div>
     </section>
 
@@ -117,52 +105,38 @@
                 <input type="text" id="login-id" placeholder="ID" class="w-full border-b-2 border-gray-100 py-4 outline-none focus:border-black text-sm font-bold">
                 <input type="password" id="login-pw" onkeyup="if(event.key === 'Enter') handleLogin()" placeholder="PASSWORD" class="w-full border-b-2 border-gray-100 py-4 outline-none focus:border-black text-sm font-bold">
                 <button onclick="handleLogin()" class="w-full bg-black text-white py-5 text-[11px] font-black tracking-widest mt-8">LOGIN</button>
-                <button onclick="showView('signup')" class="w-full text-[10px] text-gray-400 font-bold uppercase mt-4 underline">Create Account</button>
-            </div>
-        </div>
-    </section>
-
-    <section id="signup-view" class="hidden min-h-[70vh] flex items-center justify-center p-6 text-center">
-        <div class="w-full max-w-sm space-y-10">
-            <h2 class="text-4xl font-black tracking-tighter italic">JOIN US</h2>
-            <div class="space-y-4">
-                <input type="text" id="reg-id" placeholder="ID" class="w-full border-b border-gray-100 py-3 text-sm font-bold outline-none focus:border-black">
-                <input type="password" id="reg-pw" placeholder="PASSWORD" class="w-full border-b border-gray-100 py-3 text-sm font-bold outline-none focus:border-black">
-                <input type="text" id="reg-name" placeholder="NAME" class="w-full border-b border-gray-100 py-3 text-sm font-bold outline-none focus:border-black">
-                <input type="text" id="reg-phone" placeholder="PHONE" class="w-full border-b border-gray-100 py-3 text-sm font-bold outline-none focus:border-black">
-                <button onclick="handleSignup()" class="w-full bg-black text-white py-5 text-[11px] font-black tracking-widest mt-8">REGISTER</button>
+                <button onclick="showView('signup')" class="w-full text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-4 underline">Create Account</button>
             </div>
         </div>
     </section>
 
     <div id="order-modal" class="fixed inset-0 bg-black/90 hidden z-[300] flex items-center justify-center p-6 backdrop-blur-sm">
-        <div class="bg-white w-full max-w-md p-12">
-            <h2 id="modal-product-name" class="text-2xl font-black tracking-tighter mb-8 italic">CHECKOUT</h2>
+        <div class="bg-white w-full max-w-md p-12 shadow-2xl">
+            <h2 id="modal-product-name" class="text-2xl font-black tracking-tighter mb-4 italic">ORDER</h2>
+            <p id="modal-order-summary" class="text-[11px] text-gray-400 mb-8 border-b pb-4 font-bold"></p>
             <div class="space-y-6">
                 <input type="text" id="order-address" placeholder="SHIPPING ADDRESS" class="w-full border-b-2 border-gray-100 py-3 outline-none focus:border-black text-sm font-bold">
                 <input type="text" id="order-request" placeholder="MESSAGE (Optional)" class="w-full border-b-2 border-gray-100 py-3 outline-none focus:border-black text-sm font-bold">
             </div>
             <div class="flex gap-4 mt-12">
                 <button onclick="closeOrderModal()" class="flex-1 py-5 border-2 border-gray-100 text-[11px] font-bold uppercase">Close</button>
-                <button onclick="submitOrder()" id="submit-btn" class="flex-1 bg-black text-white py-5 text-[11px] font-black uppercase">Confirm</button>
+                <button onclick="submitOrder()" id="submit-btn" class="flex-1 bg-black text-white py-5 text-[11px] font-black uppercase">Confirm Order</button>
             </div>
         </div>
     </div>
 
     <footer class="ssg-header py-32 text-center text-[11px] text-white/40 tracking-widest uppercase font-medium">
         <p class="font-black text-white mb-10 italic text-3xl tracking-tighter">V shop</p>
-        <div class="space-y-2">
-            <p>Representative: YOU SUNG JO</p>
-            <p>Contact: 010-6666-5950</p>
-            <p>Email: victbiz77@gmail.com</p>
-        </div>
+        <div class="space-y-2"><p>Representative: YOU SUNG JO</p><p>Contact: 010-6666-5950</p><p>Email: victbiz77@gmail.com</p></div>
     </footer>
 
     <script>
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyKJIMt3K1yBZrX91R-yOveenkqpLUXQvXm2qg5JzDUgwWaNjvPyndzlMRiR6x-N7iB/exec';
-        let allProducts = [], currentUser = JSON.parse(localStorage.getItem('victshop_user')), currentProductObj = null, currentQty = 1;
+        let allProducts = [], currentUser = JSON.parse(localStorage.getItem('victshop_user'));
+        let cart = JSON.parse(localStorage.getItem('victshop_cart')) || [];
+        let currentProductObj = null, currentQty = 1, orderType = 'single';
 
-        async function init() { updateAuthUI(); await loadProducts(); }
+        async function init() { updateAuthUI(); await loadProducts(); updateCartBadge(); }
 
         async function loadProducts() {
             const res = await fetch(`${WEB_APP_URL}?action=getProducts`);
@@ -194,55 +168,98 @@
             updateTotalPrice(); showView('detail');
         }
 
-        function changeQty(val) { currentQty = Math.max(1, currentQty + val); document.getElementById('order-qty').value = currentQty; updateTotalPrice(); }
-        function updateTotalPrice() { document.getElementById('total-price-display').innerText = (currentProductObj.가격 * currentQty).toLocaleString() + ' KRW'; }
+        function addToCart() {
+            const item = { ...currentProductObj, qty: currentQty };
+            const existing = cart.find(c => c.상품명 === item.상품명);
+            if(existing) { existing.qty += currentQty; } else { cart.push(item); }
+            localStorage.setItem('victshop_cart', JSON.stringify(cart));
+            updateCartBadge();
+            if(confirm('장바구니에 담겼습니다. 장바구니로 이동할까요?')) { showView('cart'); }
+        }
 
-        function filterByCat(cat) { const filtered = allProducts.filter(p => p.카테고리 === cat); renderCategoryView(cat, filtered); }
-        function filterBySub(sub) { const filtered = allProducts.filter(p => p.서브카테고리 === sub); renderCategoryView(sub, filtered); }
-        function renderCategoryView(title, products) { document.getElementById('category-title').innerText = title; document.getElementById('product-container').innerHTML = products.map(p => createProductCard(p)).join(''); showView('category'); }
+        function updateCartBadge() { document.getElementById('cart-count').innerText = cart.length; }
 
-        function showMain() { showView('home'); }
+        function renderCart() {
+            const container = document.getElementById('cart-items');
+            const orderBtn = document.getElementById('cart-order-btn');
+            if(cart.length === 0) {
+                container.innerHTML = '<p class="text-center py-20 text-gray-400 font-bold italic">Cart is empty.</p>';
+                document.getElementById('cart-total').innerText = '0 KRW';
+                orderBtn.disabled = true;
+                return;
+            }
+            orderBtn.disabled = false;
+            let total = 0;
+            container.innerHTML = cart.map((item, index) => {
+                total += (item.가격 * item.qty);
+                return `
+                <div class="flex gap-6 items-center border-b pb-6">
+                    <img src="${item.이미지URL}" class="w-20 h-20 object-cover bg-gray-50">
+                    <div class="flex-1">
+                        <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest">${item.브랜드}</p>
+                        <h4 class="text-sm font-bold mb-1">${item.상품명}</h4>
+                        <p class="text-xs font-bold text-gray-900">${Number(item.가격).toLocaleString()} KRW / ${item.qty}개</p>
+                    </div>
+                    <button onclick="removeFromCart(${index})" class="text-[10px] font-black underline uppercase">Remove</button>
+                </div>`;
+            }).join('');
+            document.getElementById('cart-total').innerText = total.toLocaleString() + ' KRW';
+        }
+
+        function removeFromCart(index) { cart.splice(index, 1); localStorage.setItem('victshop_cart', JSON.stringify(cart)); updateCartBadge(); renderCart(); }
+
+        function openOrderModal(type) {
+            if(!currentUser) { showView('login'); return; }
+            orderType = type;
+            const modalTitle = document.getElementById('modal-product-name');
+            const summary = document.getElementById('modal-order-summary');
+            if(type === 'single') {
+                modalTitle.innerText = currentProductObj.상품명;
+                summary.innerText = `수량: ${currentQty}개 / 총 금액: ${document.getElementById('total-price-display').innerText}`;
+            } else {
+                modalTitle.innerText = "ALL ITEMS IN CART";
+                summary.innerText = `총 ${cart.length}개 품목 / 최종 금액: ${document.getElementById('cart-total').innerText}`;
+            }
+            document.getElementById('order-modal').classList.remove('hidden');
+        }
+
+        async function submitOrder() {
+            const btn = document.getElementById('submit-btn');
+            btn.disabled = true; btn.innerText = 'PROCESSING...';
+            let productStr = "";
+            if(orderType === 'single') {
+                productStr = `${currentProductObj.상품명} (${currentQty}개)`;
+            } else {
+                productStr = cart.map(c => `${c.상품명} (${c.qty}개)`).join(', ');
+            }
+            const orderData = { product: productStr, name: currentUser.name, phone: currentUser.phone || currentUser.id, address: document.getElementById('order-address').value, request: document.getElementById('order-request').value };
+            await fetch(`${WEB_APP_URL}?action=addOrder&data=${encodeURIComponent(JSON.stringify(orderData))}`);
+            if(orderType === 'cart') { cart = []; localStorage.removeItem('victshop_cart'); }
+            alert('주문 완료! 승조님이 확인 후 연락드릴 예정입니다.'); location.reload();
+        }
+
         function showView(view) {
-            ['home-view', 'category-view', 'detail-view', 'login-view', 'signup-view'].forEach(id => document.getElementById(id).classList.add('hidden'));
+            ['home-view', 'category-view', 'detail-view', 'login-view', 'signup-view', 'cart-view'].forEach(id => document.getElementById(id).classList.add('hidden'));
             document.getElementById(view + '-view').classList.remove('hidden');
+            if(view === 'cart') renderCart();
             window.scrollTo(0,0);
         }
 
+        function changeQty(val) { currentQty = Math.max(1, currentQty + val); document.getElementById('order-qty').value = currentQty; updateTotalPrice(); }
+        function updateTotalPrice() { document.getElementById('total-price-display').innerText = (currentProductObj.가격 * currentQty).toLocaleString() + ' KRW'; }
+        function showMain() { showView('home'); }
         function renderNav() {
             const navData = {}; allProducts.forEach(p => { if(p.카테고리) { if(!navData[p.카테고리]) navData[p.카테고리] = new Set(); if(p.서브카테고리) navData[p.카테고리].add(p.서브카테고리); }});
-            document.getElementById('main-nav').innerHTML = Object.keys(navData).map(cat => `
-                <div class="nav-item relative h-full flex items-center group">
-                    <button class="text-[12px] font-bold nav-link h-full uppercase" onclick="filterByCat('${cat}')">${cat}</button>
-                    <div class="dropdown-menu">
-                        ${Array.from(navData[cat]).map(sub => `<button class="block w-full text-left px-6 py-3 text-[11px] text-white/60 hover:text-white font-bold uppercase" onclick="filterBySub('${sub}')">${sub}</button>`).join('')}
-                    </div>
-                </div>`).join('');
+            document.getElementById('main-nav').innerHTML = Object.keys(navData).map(cat => `<div class="nav-item relative h-full flex items-center group"><button class="text-[12px] font-bold nav-link h-full uppercase" onclick="filterByCat('${cat}')">${cat}</button><div class="dropdown-menu">${Array.from(navData[cat]).map(sub => `<button class="block w-full text-left px-6 py-3 text-[11px] text-white/60 hover:text-white font-bold uppercase" onclick="filterBySub('${sub}')">${sub}</button>`).join('')}</div></div>`).join('');
         }
-
         async function handleLogin() {
-            const id = document.getElementById('login-id').value; const pw = document.getElementById('login-pw').value;
-            const res = await fetch(`${WEB_APP_URL}?action=login&data=${encodeURIComponent(JSON.stringify({id, pw}))}`);
+            const res = await fetch(`${WEB_APP_URL}?action=login&data=${encodeURIComponent(JSON.stringify({id: document.getElementById('login-id').value, pw: document.getElementById('login-pw').value}))}`);
             const data = await res.json();
-            if(data.result === 'success') { currentUser = { id, name: data.name, phone: data.phone }; localStorage.setItem('victshop_user', JSON.stringify(currentUser)); location.reload(); } else { alert('로그인 실패'); }
+            if(data.result === 'success') { currentUser = { id: document.getElementById('login-id').value, name: data.name, phone: data.phone }; localStorage.setItem('victshop_user', JSON.stringify(currentUser)); location.reload(); } else { alert('로그인 실패'); }
         }
-
-        async function handleSignup() {
-            const data = { id: document.getElementById('reg-id').value, pw: document.getElementById('reg-pw').value, name: document.getElementById('reg-name').value, phone: document.getElementById('reg-phone').value };
-            const res = await fetch(`${WEB_APP_URL}?action=signup&data=${encodeURIComponent(JSON.stringify(data))}`);
-            const text = await res.text();
-            if(text === 'success') { alert('가입 완료! 로그인해 주세요.'); showView('login'); } else { alert('이미 존재하는 ID입니다.'); }
-        }
-
-        function openOrderModal() { if(!currentUser) { showView('login'); return; } document.getElementById('order-modal').classList.remove('hidden'); }
-        function closeOrderModal() { document.getElementById('order-modal').classList.add('hidden'); }
-        async function submitOrder() {
-            const orderData = { product: `${currentProductObj.상품명} (${currentQty}개)`, name: currentUser.name, phone: currentUser.phone || currentUser.id, address: document.getElementById('order-address').value, request: document.getElementById('order-request').value };
-            await fetch(`${WEB_APP_URL}?action=addOrder&data=${encodeURIComponent(JSON.stringify(orderData))}`);
-            alert('주문 완료'); location.reload();
-        }
-
-        function updateAuthUI() { if(currentUser) { document.getElementById('user-info').innerText = currentUser.name.toUpperCase(); document.getElementById('user-info').classList.remove('hidden'); document.getElementById('login-btn').classList.add('hidden'); document.getElementById('logout-btn').classList.remove('hidden'); } }
         function handleLogout() { localStorage.removeItem('victshop_user'); location.reload(); }
+        function updateAuthUI() { if(currentUser) { document.getElementById('user-info').innerText = currentUser.name.toUpperCase(); document.getElementById('user-info').classList.remove('hidden'); document.getElementById('login-btn').classList.add('hidden'); document.getElementById('logout-btn').classList.remove('hidden'); } }
+        function closeOrderModal() { document.getElementById('order-modal').classList.add('hidden'); }
         init();
     </script>
 </body>

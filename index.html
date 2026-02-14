@@ -7,171 +7,170 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
     <style>
-        body { font-family: 'Pretendard', sans-serif; background-color: #ffffff; color: #1c1c1b; word-break: keep-all; } /* 전체 배경 순백색 */
+        body { font-family: 'Pretendard', sans-serif; background-color: #ffffff; color: #000; word-break: keep-all; }
         .hidden { display: none; }
         
-        /* 상단 헤더 및 푸터 (기존 유지) */
-        .dark-header { background-color: #222222; color: #ffffff; }
-        .nav-btn-hover:hover { color: #ffffff; opacity: 1; }
-        .active-nav { color: #ffffff; font-weight: 700; border-bottom: 2px solid #ffffff; }
+        /* [New] 신세계 면세점 스타일 블랙 헤더 */
+        .ssg-header { background-color: #000000; color: #ffffff; }
+        .nav-link { color: #ffffff; opacity: 0.7; transition: opacity 0.3s; }
+        .nav-link:hover { opacity: 1; }
+        .active-dot::after { content: ''; display: block; width: 4px; height: 4px; background: #fff; border-radius: 50%; margin: 4px auto 0; }
 
-        /* 메인 히어로 섹션 (배경 톤 조정) */
-        .hero-section { background: #f9fafb; } 
-
-        /* [NEW] 갤러리 스타일 상품 카드 */
-        .product-card { 
-            background: transparent; /* 배경 투명하게 */
-            border: none; /* 테두리 완전 제거 */
-            border-radius: 0; /* 둥근 모서리 제거 */
-            transition: transform 0.4s ease;
-        }
-        .product-card:hover { 
-            transform: translateY(-5px); /* 호버 시 살짝 위로 */
-        }
-        .product-card:hover img {
-            transform: scale(1.03); /* 이미지 확대 효과 */
-        }
-
-        /* 드롭다운 메뉴 스타일 (기존 유지) */
-        .nav-item:hover .dropdown-menu { display: block; }
-        .dropdown-menu { display: none; position: absolute; top: 100%; left: 0; background: #2a2a2a; min-width: 200px; padding: 12px; border-radius: 0 0 12px 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); z-index: 100; border-top: 1px solid #3a3a3a; }
-        .dropdown-item { color: #d1d5db; }
-        .dropdown-item:hover { color: #ffffff; background-color: #3a3a3a; }
+        /* [New] 상품 카드 스타일 (테두리 제거, 브랜드 강조) */
+        .product-card { background: #ffffff; border: none !important; transition: transform 0.3s ease; }
+        .brand-text { font-size: 14px; font-weight: 900; letter-spacing: -0.02em; text-transform: uppercase; margin-bottom: 4px; }
+        .price-text { font-size: 16px; font-weight: 800; color: #000; margin-top: 8px; }
         
-        .top5-badge { background: #1c1c1b; color: #ffffff; font-size: 9px; padding: 3px 10px; font-weight: 800; letter-spacing: 0.05em; }
+        .hero-section { background-color: #f8f8f8; }
+        .dropdown-menu { display: none; position: absolute; top: 100%; left: 0; background: #111; min-width: 200px; padding: 10px 0; z-index: 100; }
+        .nav-item:hover .dropdown-menu { display: block; }
+        .dropdown-item:hover { background: #222; }
+
         ::-webkit-scrollbar { display: none; }
     </style>
 </head>
 <body>
-    <header class="sticky top-0 z-[150] dark-header shadow-sm">
-        <div class="max-w-7xl mx-auto px-8 h-20 flex items-center justify-between">
-            <h1 class="text-3xl font-black tracking-tighter cursor-pointer" onclick="location.href='/'">V shop</h1>
-            <div class="flex items-center gap-8 text-[11px] font-bold uppercase tracking-[0.2em] text-gray-400">
-                <div id="user-info" class="hidden text-white font-black"></div>
-                <button id="login-btn" onclick="showView('login')" class="nav-btn-hover transition opacity-70">Sign In</button>
-                <button id="logout-btn" class="hidden nav-btn-hover transition opacity-70" onclick="handleLogout()">Logout</button>
+    <header class="sticky top-0 z-[200] ssg-header">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+            <h1 class="text-2xl font-black tracking-tighter cursor-pointer" onclick="location.reload()">V shop</h1>
+            <div class="flex items-center gap-6 text-[11px] font-bold uppercase tracking-widest">
+                <span id="user-info" class="hidden text-white"></span>
+                <button id="login-btn" onclick="showView('login')" class="nav-link">Sign In</button>
+                <button id="logout-btn" class="hidden nav-link" onclick="handleLogout()">Logout</button>
             </div>
         </div>
-        <nav class="max-w-7xl mx-auto px-8 flex gap-8 items-center h-14 overflow-visible border-t border-gray-700/30">
-            <button class="text-[12px] font-medium text-gray-300 h-full px-2 active-nav nav-btn-hover transition opacity-70" onclick="showMain()">HOME</button>
-            <div id="main-nav" class="flex gap-8 h-full items-center text-gray-400 font-medium"></div>
+        <nav class="max-w-7xl mx-auto px-6 h-12 flex gap-8 items-center border-t border-white/10 overflow-visible">
+            <button class="text-[12px] font-bold nav-link active-dot" onclick="showMain()">HOME</button>
+            <div id="main-nav" class="flex gap-8 h-full items-center">
+                </div>
         </nav>
     </header>
 
     <section id="home-view">
-        <div class="hero-section py-36 px-8">
-            <div class="max-w-7xl mx-auto flex flex-col items-center text-center">
-                <p class="text-[11px] font-black tracking-[0.4em] text-gray-900 mb-8 uppercase">Premium Curation</p>
-                <h2 class="text-5xl md:text-7xl font-black tracking-tighter mb-10 leading-[1.05] text-gray-900">
-                    CURATED FOR<br><span class="text-gray-400 italic font-medium">YOUR LIFESTYLE.</span>
+        <div class="hero-section py-32 border-b border-gray-100">
+            <div class="max-w-7xl mx-auto px-6 text-center">
+                <p class="text-[10px] font-black tracking-[0.4em] text-gray-400 mb-6 uppercase">Editor's Choice</p>
+                <h2 class="text-5xl md:text-7xl font-black tracking-tighter mb-10 leading-none">
+                    ESSENTIALS FOR<br><span class="italic text-gray-300">MODERN LIFE.</span>
                 </h2>
-                <div class="h-[2px] w-20 bg-gray-900 mb-12"></div>
-                <p class="text-gray-500 text-sm max-w-md leading-relaxed font-medium">
-                    V shop이 제안하는 새로운 감각.<br>엄선된 TOP 5 아이템을 만나보세요.
+                <p class="text-gray-500 text-sm max-w-sm mx-auto font-medium leading-relaxed">
+                    V shop이 제안하는 감각적인 라이프스타일.<br>엄선된 TOP 5 아이템을 확인하세요.
                 </p>
             </div>
         </div>
 
-        <div class="max-w-7xl mx-auto px-8 py-28 bg-white">
-            <div class="flex flex-col items-center mb-20">
-                <h3 class="text-3xl font-black tracking-tighter italic text-gray-900 mb-3">V shop's TOP 5</h3>
-                <p class="text-[11px] font-bold text-gray-400 uppercase tracking-[0.2em]">Editor's Selection</p>
+        <div class="max-w-7xl mx-auto px-6 py-24">
+            <div class="flex items-center justify-between mb-16">
+                <h3 class="text-3xl font-black tracking-tighter italic">V shop's TOP 5</h3>
+                <span class="h-[1px] flex-1 mx-8 bg-gray-100"></span>
             </div>
-            <div id="top5-container" class="grid grid-cols-1 md:grid-cols-5 gap-x-8 gap-y-16">
+            <div id="top5-container" class="grid grid-cols-1 md:grid-cols-5 gap-10">
                 </div>
         </div>
     </section>
 
-    <section id="category-view" class="hidden py-24 px-8 max-w-7xl mx-auto bg-white">
-        <div class="mb-20 text-center">
-            <h2 id="category-title" class="text-3xl font-black tracking-tighter uppercase italic text-gray-900 mb-3">CATEGORY</h2>
-            <p id="category-desc" class="text-gray-400 text-[11px] font-bold uppercase tracking-[0.2em]">Explore Collection</p>
+    <section id="category-view" class="hidden py-24 px-6 max-w-7xl mx-auto">
+        <div class="text-center mb-20">
+            <h2 id="category-title" class="text-4xl font-black tracking-tighter uppercase italic mb-4">CATEGORY</h2>
+            <p class="text-gray-400 text-[11px] font-bold tracking-[0.2em]">EXPLORE COLLECTION</p>
         </div>
         <div id="product-container" class="grid grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-24">
             </div>
     </section>
 
-    <section id="login-view" class="hidden min-h-[70vh] flex items-center justify-center p-8 bg-white">
+    <section id="login-view" class="hidden min-h-[70vh] flex items-center justify-center p-6">
         <div class="w-full max-w-sm space-y-12">
-            <div class="text-center">
-                <h2 class="text-4xl font-black tracking-tighter italic text-gray-900">V shop</h2>
-                <p class="text-[10px] font-bold text-gray-400 mt-2 tracking-widest uppercase">Member Service</p>
-            </div>
-            <div class="space-y-6">
-                <input type="text" id="login-id" placeholder="ID" class="w-full bg-transparent border-b-2 border-gray-100 py-4 outline-none focus:border-black text-sm transition-all placeholder-gray-300 font-bold">
-                <input type="password" id="login-pw" placeholder="PASSWORD" class="w-full bg-transparent border-b-2 border-gray-100 py-4 outline-none focus:border-black text-sm transition-all placeholder-gray-300 font-bold">
-                <button onclick="handleLogin()" class="w-full bg-black text-white py-5 text-[11px] font-black tracking-[0.2em] mt-8 hover:bg-gray-900 transition">SIGN IN</button>
+            <div class="text-center"><h2 class="text-4xl font-black tracking-tighter italic">V shop</h2></div>
+            <div class="space-y-4">
+                <input type="text" id="login-id" placeholder="ID" class="w-full border-b-2 border-gray-100 py-4 outline-none focus:border-black text-sm font-bold">
+                <input type="password" id="login-pw" placeholder="PASSWORD" class="w-full border-b-2 border-gray-100 py-4 outline-none focus:border-black text-sm font-bold">
+                <button onclick="handleLogin()" class="w-full bg-black text-white py-5 text-[11px] font-black tracking-widest mt-8">SIGN IN</button>
             </div>
         </div>
     </section>
-    <div id="order-modal" class="fixed inset-0 bg-white/90 hidden z-[200] flex items-center justify-center p-6 backdrop-blur-md">
-        <div class="bg-white w-full max-w-md p-12 shadow-[0_0_50px_rgba(0,0,0,0.05)]">
-            <h2 id="modal-product-name" class="text-2xl font-black tracking-tighter mb-10 italic text-gray-900 text-center">ORDER</h2>
+
+    <div id="order-modal" class="fixed inset-0 bg-black/90 hidden z-[300] flex items-center justify-center p-6 backdrop-blur-sm">
+        <div class="bg-white w-full max-w-md p-12">
+            <h2 id="modal-product-name" class="text-2xl font-black tracking-tighter mb-10 italic">ORDER</h2>
             <div class="space-y-8">
-                <input type="text" id="order-address" placeholder="SHIPPING ADDRESS" class="w-full border-b-2 border-gray-100 py-3 outline-none focus:border-black text-sm transition-all placeholder-gray-300 font-bold">
-                <input type="text" id="order-request" placeholder="MESSAGE (Optional)" class="w-full border-b-2 border-gray-100 py-3 outline-none focus:border-black text-sm transition-all placeholder-gray-300 font-bold">
-                <div class="bg-gray-50 p-6 text-[10px] text-gray-500 italic text-center">
-                    BUYER: <span id="info-name" class="text-black font-black"></span> <br> TEL: <span id="info-phone" class="text-black font-black"></span>
-                </div>
+                <input type="text" id="order-address" placeholder="SHIPPING ADDRESS" class="w-full border-b-2 border-gray-100 py-3 outline-none focus:border-black text-sm font-bold">
+                <input type="text" id="order-request" placeholder="MESSAGE (Optional)" class="w-full border-b-2 border-gray-100 py-3 outline-none focus:border-black text-sm font-bold">
             </div>
             <div class="flex gap-4 mt-12">
-                <button onclick="closeOrderModal()" class="flex-1 py-5 border-2 border-gray-100 text-[11px] font-bold uppercase hover:bg-gray-50 transition">Close</button>
-                <button onclick="submitOrder()" id="submit-btn" class="flex-1 bg-black text-white py-5 text-[11px] font-black uppercase hover:bg-gray-900 transition">Confirm</button>
+                <button onclick="closeOrderModal()" class="flex-1 py-5 border-2 border-gray-100 text-[11px] font-bold uppercase">Close</button>
+                <button onclick="submitOrder()" id="submit-btn" class="flex-1 bg-black text-white py-5 text-[11px] font-black uppercase">Confirm</button>
             </div>
         </div>
     </div>
-    <footer class="dark-header py-36 text-center text-[11px] text-gray-400 tracking-widest uppercase font-medium">
+
+    <footer class="ssg-header py-32 text-center text-[11px] text-white/40 tracking-widest uppercase font-medium">
         <p class="font-black text-white mb-10 italic text-3xl tracking-tighter">V shop</p>
-        <div class="space-y-3 opacity-80">
-            <p>Representative: YOU SUNG JO</p>
+        <div class="space-y-2">
+            <p>Representative: YOU SUNG JO (유승조)</p>
             <p>Contact: 010-6666-5950</p>
             <p>Email: victbiz77@gmail.com</p>
         </div>
-        <p class="mt-20 opacity-30 text-[9px]">© 2026 V shop. ALL RIGHTS RESERVED.</p>
+        <p class="mt-20 opacity-20 text-[9px]">© 2026 V shop. ALL RIGHTS RESERVED.</p>
     </footer>
+
     <script>
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyKJIMt3K1yBZrX91R-yOveenkqpLUXQvXm2qg5JzDUgwWaNjvPyndzlMRiR6x-N7iB/exec';
         let allProducts = [], currentUser = JSON.parse(localStorage.getItem('victshop_user'));
+
         async function init() { updateAuthUI(); await loadProducts(); }
+
         async function loadProducts() {
             try {
-                const response = await fetch(`${WEB_APP_URL}?action=getProducts`);
-                allProducts = await response.json();
-                const navData = {}; allProducts.forEach(p => { if(p.카테고리) { if(!navData[p.카테고리]) navData[p.카테고리] = new Set(); if(p.서브카테고리) navData[p.카테고리].add(p.서브카테고리); }});
+                const res = await fetch(`${WEB_APP_URL}?action=getProducts`);
+                allProducts = await res.json();
+                
+                const navData = {};
+                allProducts.forEach(p => { if(p.카테고리) { if(!navData[p.카테고리]) navData[p.카테고리] = new Set(); if(p.서브카테고리) navData[p.카테고리].add(p.서브카테고리); }});
+
                 document.getElementById('main-nav').innerHTML = Object.keys(navData).map(cat => `
-                    <div class="nav-item relative h-full flex items-center group"><button class="text-[12px] font-medium text-gray-400 hover:text-white tracking-tight h-full nav-btn-hover transition opacity-70" onclick="filterByCat('${cat}')">${cat.toUpperCase()}</button>
-                    <div class="dropdown-menu">${Array.from(navData[cat]).map(sub => `<button class="dropdown-item block w-full text-left px-4 py-3 text-[11px] font-bold uppercase tracking-widest transition" onclick="filterBySub('${sub}')">${sub}</button>`).join('')}</div></div>`).join('');
+                    <div class="nav-item relative h-full flex items-center">
+                        <button class="text-[12px] font-bold nav-link h-full" onclick="filterByCat('${cat}')">${cat.toUpperCase()}</button>
+                        <div class="dropdown-menu">
+                            ${Array.from(navData[cat]).map(sub => `<button class="block w-full text-left px-6 py-3 text-[11px] text-white/60 hover:text-white font-bold uppercase" onclick="filterBySub('${sub}')">${sub}</button>`).join('')}
+                        </div>
+                    </div>`).join('');
+                
                 const top5 = allProducts.filter(p => String(p.TOP5).toUpperCase() === 'Y').slice(0,5);
-                document.getElementById('top5-container').innerHTML = top5.map(p => createProductCard(p, true)).join('');
+                document.getElementById('top5-container').innerHTML = top5.map(p => createProductCard(p)).join('');
             } catch (e) { console.error(e); }
         }
-        function createProductCard(p, isTop5) {
+
+        function createProductCard(p) {
             return `
-                <div class="product-card group cursor-pointer pb-4" onclick="openOrderModal('${p.상품명}')">
-                    <div class="aspect-[3/4] overflow-hidden bg-gray-50 mb-6 relative">
-                        ${isTop5 ? '<span class="absolute top-0 left-0 z-10 top5-badge uppercase rounded-none px-3 py-2">Selected</span>' : ''}
-                        <img src="${p.이미지URL}" alt="${p.상품명}" class="w-full h-full object-cover transition-transform duration-700 ease-in-out">
+                <div class="product-card group cursor-pointer" onclick="openOrderModal('${p.상품명}')">
+                    <div class="aspect-[1/1] overflow-hidden bg-gray-50 mb-8">
+                        <img src="${p.이미지URL}" alt="${p.상품명}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
                     </div>
-                    <div class="space-y-2 text-center md:text-left px-2">
-                        <span class="text-[11px] font-black text-gray-900 uppercase tracking-[0.15em] block mb-2">${p.브랜드 || 'V COLLECTION'}</span>
-                        <h3 class="text-[15px] font-medium tracking-tight text-gray-900 line-clamp-1">${p.상품명}</h3>
-                        <p class="text-[15px] font-bold pt-1 text-gray-900">${Number(p.가격).toLocaleString()} KRW</p>
+                    <div class="px-2">
+                        <p class="brand-text text-black">${p.브랜드 || 'V shop'}</p>
+                        <h3 class="text-[14px] font-medium text-gray-500 line-clamp-1 mb-2">${p.상품명}</h3>
+                        <p class="price-text">${Number(p.가격).toLocaleString()} KRW</p>
                     </div>
-                </div>
-            `;
+                </div>`;
         }
-        // (나머지 로직 함수들은 기존과 완전히 동일합니다)
+
         function filterByCat(cat) { const filtered = allProducts.filter(p => p.카테고리 === cat); renderCategoryView(cat, filtered); }
         function filterBySub(sub) { const filtered = allProducts.filter(p => p.서브카테고리 === sub); renderCategoryView(sub, filtered); }
-        function renderCategoryView(title, products) { document.getElementById('category-title').innerText = title; document.getElementById('product-container').innerHTML = products.map(p => createProductCard(p, false)).join(''); showView('category'); }
+        function renderCategoryView(title, products) { document.getElementById('category-title').innerText = title; document.getElementById('product-container').innerHTML = products.map(p => createProductCard(p)).join(''); showView('category'); }
         function showMain() { showView('home'); }
         function showView(view) { ['home-view', 'category-view', 'login-view'].forEach(id => document.getElementById(id).classList.add('hidden')); document.getElementById(view + '-view').classList.remove('hidden'); window.scrollTo(0,0); }
         async function handleLogin() { const id = document.getElementById('login-id').value; const pw = document.getElementById('login-pw').value; const res = await fetch(`${WEB_APP_URL}?action=login&data=${encodeURIComponent(JSON.stringify({id, pw}))}`); const data = await res.json(); if(data.result === 'success') { currentUser = { id, name: data.name, phone: data.phone }; localStorage.setItem('victshop_user', JSON.stringify(currentUser)); location.reload(); } else { alert('Login Failed'); } }
         function handleLogout() { localStorage.removeItem('victshop_user'); location.reload(); }
         function updateAuthUI() { if(currentUser) { document.getElementById('user-info').innerText = currentUser.name.toUpperCase(); document.getElementById('user-info').classList.remove('hidden'); document.getElementById('login-btn').classList.add('hidden'); document.getElementById('logout-btn').classList.remove('hidden'); } }
-        function openOrderModal(name) { if(!currentUser) { showView('login'); return; } currentProduct = name; document.getElementById('modal-product-name').innerText = name; document.getElementById('info-name').innerText = currentUser.name; document.getElementById('info-phone').innerText = currentUser.phone || currentUser.id; document.getElementById('order-modal').classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
+        function openOrderModal(name) { if(!currentUser) { showView('login'); return; } currentProduct = name; document.getElementById('modal-product-name').innerText = name; document.getElementById('order-modal').classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
         function closeOrderModal() { document.getElementById('order-modal').classList.add('hidden'); document.body.style.overflow = 'auto'; }
-        async function submitOrder() { const address = document.getElementById('order-address').value; if(!address) return alert('Enter address.'); const btn = document.getElementById('submit-btn'); btn.disabled = true; btn.innerText = 'PROCESSING...'; const orderData = { product: currentProduct, name: currentUser.name, phone: currentUser.phone || currentUser.id, address: address, request: document.getElementById('order-request').value }; await fetch(`${WEB_APP_URL}?action=addOrder&data=${encodeURIComponent(JSON.stringify(orderData))}`); alert('주문 완료'); location.reload(); }
+        async function submitOrder() {
+            const address = document.getElementById('order-address').value; if(!address) return alert('Enter address.');
+            const btn = document.getElementById('submit-btn'); btn.disabled = true; btn.innerText = 'PROCESSING...';
+            const orderData = { product: currentProduct, name: currentUser.name, phone: currentUser.phone || currentUser.id, address: address, request: document.getElementById('order-request').value };
+            await fetch(`${WEB_APP_URL}?action=addOrder&data=${encodeURIComponent(JSON.stringify(orderData))}`);
+            alert('주문 완료'); location.reload();
+        }
         init();
     </script>
 </body>

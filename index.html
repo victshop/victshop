@@ -25,10 +25,10 @@
     <header class="sticky top-0 z-[200] ssg-header shadow-xl">
         <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
             <h1 class="text-2xl font-black tracking-tighter cursor-pointer" onclick="location.reload()">V shop</h1>
-            <div class="flex items-center gap-6 text-[11px] font-bold uppercase tracking-widest">
+            <div class="flex items-center gap-6 text-[11px] font-bold uppercase tracking-widest text-white/70">
                 <span id="user-info" class="hidden text-white font-black"></span>
-                <button id="login-btn" onclick="showView('login')" class="nav-link">Sign In</button>
-                <button id="logout-btn" class="hidden nav-link" onclick="handleLogout()">Logout</button>
+                <button id="login-btn" onclick="showView('login')" class="hover:text-white transition">Sign In</button>
+                <button id="logout-btn" class="hidden hover:text-white transition" onclick="handleLogout()">Logout</button>
             </div>
         </div>
         <nav class="max-w-7xl mx-auto px-6 h-12 flex gap-8 items-center border-t border-white/10 overflow-visible">
@@ -68,23 +68,49 @@
         </div>
     </section>
 
-    <section id="signup-view" class="hidden min-h-[70vh] flex items-center justify-center p-6">
+    <section id="signup-view" class="hidden min-h-[70vh] flex items-center justify-center p-6 text-center">
         <div class="w-full max-w-sm space-y-10">
-            <h2 class="text-4xl font-black tracking-tighter italic text-center">JOIN US</h2>
+            <h2 class="text-4xl font-black tracking-tighter italic">JOIN US</h2>
             <div class="space-y-4">
                 <input type="text" id="reg-id" placeholder="ID" class="w-full border-b border-gray-100 py-3 text-sm font-bold outline-none focus:border-black">
                 <input type="password" id="reg-pw" placeholder="PASSWORD" class="w-full border-b border-gray-100 py-3 text-sm font-bold outline-none focus:border-black">
                 <input type="text" id="reg-name" placeholder="NAME" class="w-full border-b border-gray-100 py-3 text-sm font-bold outline-none focus:border-black">
                 <input type="text" id="reg-phone" placeholder="PHONE (010-0000-0000)" class="w-full border-b border-gray-100 py-3 text-sm font-bold outline-none focus:border-black">
-                <div class="flex items-center gap-2 py-4">
+                <div class="flex items-center justify-center gap-2 py-4">
                     <input type="checkbox" id="agree-check">
-                    <label class="text-[10px] text-gray-400 font-bold underline cursor-pointer">이용약관 및 개인정보 처리방침 동의</label>
+                    <label class="text-[10px] text-gray-400 font-bold underline cursor-pointer" onclick="showTermsModal()">이용약관 및 개인정보 처리방침 동의</label>
                 </div>
                 <button onclick="handleSignup()" class="w-full bg-black text-white py-5 text-[11px] font-black tracking-widest">REGISTER</button>
                 <button onclick="showView('login')" class="w-full text-[10px] text-gray-400 font-bold uppercase text-center mt-4">Back to Login</button>
             </div>
         </div>
     </section>
+
+    <div id="terms-modal" class="fixed inset-0 bg-black/90 hidden z-[400] flex items-center justify-center p-6 backdrop-blur-sm">
+        <div class="bg-white w-full max-w-2xl p-10 max-h-[80vh] overflow-y-auto">
+            <h2 class="text-xl font-black mb-6 border-b pb-4">V shop 이용약관</h2>
+            <div class="text-[11px] text-gray-500 leading-relaxed whitespace-pre-line text-left">
+                제1조 (목적)
+                본 약관은 V shop(이하 "몰")이 운영하는 인터넷 사이트에서 제공하는 서비스를 이용함에 있어 몰과 이용자의 권리, 의무 및 책임사항을 규정함을 목적으로 합니다.
+
+                제2조 (회원가입 및 개인정보 수집)
+                1. 이용자는 몰이 정한 가입 양식에 따라 회원정보를 기입한 후 본 약관에 동의한다는 의사표시를 함으로써 회원가입을 신청합니다.
+                2. 몰은 서비스 제공을 위해 최소한의 개인정보를 수집하며, 수집 항목은 ID, 이름, 비밀번호, 연락처, 주소(주문 시)입니다.
+                3. 수집된 정보는 주문 관리, 본인 확인, 결제 안내 및 서비스 개선 용도로만 사용됩니다.
+
+                제3조 (개인정보의 보유 및 파기)
+                몰은 회원이 탈퇴하거나 서비스가 종료되는 경우, 관련 법령에 의거하여 보존해야 하는 경우를 제외하고 수집된 개인정보를 즉시 파기합니다.
+
+                제4조 (몰과 이용자의 의무)
+                1. 몰은 법령과 본 약관이 금지하거나 공서양속에 반하는 행위를 하지 않으며 안정적인 서비스 제공을 위해 최선을 다합니다.
+                2. 이용자는 본인의 ID 및 비밀번호를 관리할 책임이 있으며, 타인에게 양도하거나 대여할 수 없습니다.
+
+                제5조 (주문 및 결제)
+                몰은 지인 전용 폐쇄형 쇼핑몰로서, 주문 접수 후 담당자(YOU SUNG JO)가 직접 연락하여 결제 수단 및 배송 일정을 안내합니다.
+            </div>
+            <button onclick="closeTermsModal()" class="w-full bg-black text-white py-5 text-[11px] font-black tracking-widest mt-8">확인</button>
+        </div>
+    </div>
 
     <div id="order-modal" class="fixed inset-0 bg-black/90 hidden z-[300] flex items-center justify-center p-6 backdrop-blur-sm">
         <div class="bg-white w-full max-w-md p-12">
@@ -144,6 +170,9 @@
                     </div>
                 </div>`;
         }
+
+        function showTermsModal() { document.getElementById('terms-modal').classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
+        function closeTermsModal() { document.getElementById('terms-modal').classList.add('hidden'); document.body.style.overflow = 'auto'; }
 
         async function handleSignup() {
             if(!document.getElementById('agree-check').checked) return alert('약관에 동의해 주세요.');

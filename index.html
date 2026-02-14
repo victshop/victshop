@@ -64,11 +64,14 @@
     <section id="category-view" class="view-section hidden py-24 px-6 max-w-7xl mx-auto">
         <div class="text-center mb-20 border-b border-gray-100 pb-10">
             <h2 id="category-title" class="text-4xl font-black tracking-tighter uppercase italic mb-4">CATEGORY</h2>
-            <div id="product-container" class="grid grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-24"></div>
         </div>
+        <div id="product-container" class="grid grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-24"></div>
     </section>
 
     <section id="detail-view" class="view-section hidden py-12 px-6 max-w-7xl mx-auto">
+        <button onclick="goBackFromDetail()" class="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest mb-10 hover:underline">
+            ← Back to list
+        </button>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 mb-20">
             <div class="bg-[#f9f9f9] flex items-center justify-center p-8 md:p-16"><img id="detail-img" src="" class="max-w-full h-auto"></div>
             <div class="flex flex-col justify-center">
@@ -203,6 +206,7 @@
         let allProducts = [], cart = JSON.parse(localStorage.getItem('victshop_cart')) || [];
         let currentUser = JSON.parse(localStorage.getItem('victshop_user'));
         let currentProductObj = null, currentQty = 1, orderType = 'single';
+        let previousView = 'home'; // 이전 뷰를 저장하기 위한 변수
 
         async function init() { updateAuthUI(); await loadProducts(); updateCartBadge(); }
 
@@ -242,6 +246,12 @@
         }
 
         function showProductDetail(name) {
+            // 현재 상세페이지를 보여주기 전의 뷰 상태를 저장 (뒤로가기용)
+            const currentActiveView = Array.from(document.querySelectorAll('.view-section')).find(el => !el.classList.contains('hidden'));
+            if(currentActiveView && currentActiveView.id !== 'detail-view') {
+                previousView = currentActiveView.id.replace('-view', '');
+            }
+
             currentProductObj = allProducts.find(p => p.상품명 === name);
             if(!currentProductObj) return;
             currentQty = 1; document.getElementById('order-qty').value = 1;
@@ -251,6 +261,10 @@
             document.getElementById('detail-price-val').innerText = Number(currentProductObj.가격).toLocaleString();
             document.getElementById('detail-long-img').src = currentProductObj.상세이미지URL || '';
             updateTotalPrice(); showView('detail');
+        }
+
+        function goBackFromDetail() {
+            showView(previousView);
         }
 
         function filterByCat(cat) { const filtered = allProducts.filter(p => p.카테고리 === cat); renderCategoryView(cat, filtered); }
@@ -330,7 +344,6 @@
             const btn = document.getElementById('final-submit-btn'); btn.disabled = true; btn.innerText = 'PROCESSING...';
             const productStr = orderType === 'single' ? `${currentProductObj.상품명} (${currentQty}개)` : cart.map(c => `${c.상품명} (${c.qty}개)`).join(', ');
             
-            // 시트 헤더(주문시간, 상품명, 주문자명, 연락처, 주소, 배송 요청사항) 순서와 이름을 맞춰서 전송
             const finalData = { 
                 "상품명": productStr, 
                 "주문자명": document.getElementById('chk-orderer-name').value, 

@@ -51,7 +51,7 @@
 
     <section id="home-view" class="view-section">
         <div class="bg-stone-50 py-32 border-b border-gray-100 text-center">
-            <p class="text-[10px] font-black tracking-[0.4em] text-stone-400 mb-6 uppercase">Selected by V SHOP</p>
+            <p class="text-[10px] font-black tracking-[0.4em] text-stone-400 mb-6 uppercase">Selected by Seungjo</p>
             <h2 class="text-5xl md:text-7xl font-black tracking-tighter mb-10 leading-none">ESSENTIALS FOR<br><span class="italic text-stone-300">MODERN LIFE.</span></h2>
             <p class="text-stone-500 text-sm max-w-sm mx-auto font-medium">V shop이 제안하는 프리미엄 컬렉션.</p>
         </div>
@@ -193,7 +193,7 @@
         <p class="font-black text-white mb-10 italic text-3xl tracking-tighter">V shop</p>
         <div class="space-y-2">
             <p>Representative: YOU SUNG JO</p>
-            <p>Contact: 090-7895-0293</p>
+            <p>Contact: 010-6666-5950</p>
             <p>Email: victbiz77@gmail.com</p>
         </div>
     </footer>
@@ -293,39 +293,17 @@
         function updateCartQty(idx, delta) { cart[idx].qty = Math.max(1, cart[idx].qty+delta); localStorage.setItem('victshop_cart', JSON.stringify(cart)); renderCart(); updateCartBadge(); }
         function removeFromCart(idx) { cart.splice(idx,1); localStorage.setItem('victshop_cart', JSON.stringify(cart)); renderCart(); updateCartBadge(); }
 
-        // 마이페이지 정보 로드
         function loadMyInfo() {
             if(!currentUser) return showView('login');
             document.getElementById('my-id').value = currentUser.id;
             document.getElementById('my-name').value = currentUser.name || '';
             document.getElementById('my-phone').value = currentUser.phone || '';
-            document.getElementById('my-pw').value = '';
         }
 
-        // 회원정보 수정 처리
         async function handleUpdateProfile() {
-            const btn = document.getElementById('profile-upd-btn');
-            const data = {
-                id: document.getElementById('my-id').value,
-                name: document.getElementById('my-name').value,
-                phone: document.getElementById('my-phone').value,
-                pw: document.getElementById('my-pw').value
-            };
-            if(!data.name || !data.phone) return alert('이름과 연락처는 필수입니다.');
-
-            btn.disabled = true; btn.innerText = 'UPDATING...';
-            try {
-                const res = await fetch(`${WEB_APP_URL}?action=updateUser&data=${encodeURIComponent(JSON.stringify(data))}`);
-                const result = await res.text();
-                if(result === 'success') {
-                    alert('회원정보가 수정되었습니다.');
-                    currentUser.name = data.name;
-                    currentUser.phone = data.phone;
-                    localStorage.setItem('victshop_user', JSON.stringify(currentUser));
-                    location.reload();
-                } else { alert('수정 실패'); }
-            } catch(e) { console.error(e); }
-            btn.disabled = false; btn.innerText = 'UPDATE PROFILE';
+            const data = { id: document.getElementById('my-id').value, name: document.getElementById('my-name').value, phone: document.getElementById('my-phone').value, pw: document.getElementById('my-pw').value };
+            const res = await fetch(`${WEB_APP_URL}?action=updateUser&data=${encodeURIComponent(JSON.stringify(data))}`);
+            if(await res.text() === 'success') { alert('수정 완료'); currentUser.name = data.name; currentUser.phone = data.phone; localStorage.setItem('victshop_user', JSON.stringify(currentUser)); location.reload(); }
         }
 
         function goToCheckout(type) {
@@ -340,8 +318,6 @@
             }
             document.getElementById('chk-total-items').innerText = total.toLocaleString() + ' KRW';
             document.getElementById('chk-final-total').innerText = total.toLocaleString() + ' KRW';
-            
-            // 실제 회원 데이터 연동 (010 번호 강제 값 삭제)
             document.getElementById('chk-orderer-name').value = currentUser.name || '';
             document.getElementById('chk-orderer-phone').value = currentUser.phone || '';
             document.getElementById('chk-name').value = currentUser.name || '';
@@ -353,16 +329,19 @@
             if(!document.getElementById('chk-agree').checked) return alert('약관 동의가 필요합니다.');
             const btn = document.getElementById('final-submit-btn'); btn.disabled = true; btn.innerText = 'PROCESSING...';
             const productStr = orderType === 'single' ? `${currentProductObj.상품명} (${currentQty}개)` : cart.map(c => `${c.상품명} (${c.qty}개)`).join(', ');
+            
+            // 시트 헤더(주문시간, 상품명, 주문자명, 연락처, 주소, 배송 요청사항) 순서와 이름을 맞춰서 전송
             const finalData = { 
-                orderer: `${document.getElementById('chk-orderer-name').value} (${document.getElementById('chk-orderer-phone').value})`, 
-                receiver: `${document.getElementById('chk-name').value} (${document.getElementById('chk-phone').value})`, 
-                address: `[${document.getElementById('chk-postcode').value}] ${document.getElementById('chk-address').value} ${document.getElementById('chk-address-detail').value}`, 
-                product: productStr, 
-                request: document.getElementById('chk-request').value 
+                "상품명": productStr, 
+                "주문자명": document.getElementById('chk-orderer-name').value, 
+                "연락처": document.getElementById('chk-orderer-phone').value, 
+                "주소": `[${document.getElementById('chk-postcode').value}] ${document.getElementById('chk-address').value} ${document.getElementById('chk-address-detail').value}`, 
+                "배송 요청사항": document.getElementById('chk-request').value 
             };
+            
             await fetch(`${WEB_APP_URL}?action=addOrder&data=${encodeURIComponent(JSON.stringify(finalData))}`);
             if(orderType === 'cart') { cart = []; localStorage.removeItem('victshop_cart'); }
-            alert('주문 완료! 판매자가 곧 개별 연락드립니다.'); location.reload();
+            alert('주문 완료!'); location.reload();
         }
 
         async function handleLogin() { 
@@ -370,11 +349,7 @@
             const pw = document.getElementById('login-pw').value;
             const res = await fetch(`${WEB_APP_URL}?action=login&data=${encodeURIComponent(JSON.stringify({id, pw}))}`); 
             const data = await res.json(); 
-            if(data.result === 'success') { 
-                currentUser = { id, name: data.name, phone: data.phone }; 
-                localStorage.setItem('victshop_user', JSON.stringify(currentUser)); 
-                location.reload(); 
-            } else { alert('아이디 또는 비밀번호를 확인해 주세요.'); } 
+            if(data.result === 'success') { currentUser = { id, name: data.name, phone: data.phone }; localStorage.setItem('victshop_user', JSON.stringify(currentUser)); location.reload(); } else { alert('로그인 실패'); } 
         }
         function handleLogout() { localStorage.removeItem('victshop_user'); location.reload(); }
         function updateAuthUI() { if(currentUser) { document.getElementById('user-info-btn').innerText = currentUser.name.toUpperCase(); document.getElementById('user-info-btn').classList.remove('hidden'); document.getElementById('login-btn').classList.add('hidden'); document.getElementById('logout-btn').classList.remove('hidden'); } }

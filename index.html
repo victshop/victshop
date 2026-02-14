@@ -38,12 +38,10 @@
     </header>
 
     <section id="home-view">
-        <div class="bg-stone-50 py-32 border-b border-gray-100">
-            <div class="max-w-7xl mx-auto px-6 text-center">
-                <p class="text-[10px] font-black tracking-[0.4em] text-stone-400 mb-6 uppercase">Editor's Selection</p>
-                <h2 class="text-5xl md:text-7xl font-black tracking-tighter mb-10 leading-none">MODERN<br><span class="italic text-stone-300">ESSENTIALS.</span></h2>
-                <p class="text-stone-500 text-sm max-w-sm mx-auto font-medium leading-relaxed">V shop이 큐레이션한 프리미엄 가전 컬렉션.<br>엄선된 TOP 5 제품을 만나보세요.</p>
-            </div>
+        <div class="bg-stone-50 py-32 border-b border-gray-100 text-center">
+            <p class="text-[10px] font-black tracking-[0.4em] text-stone-400 mb-6 uppercase">Selected by V</p>
+            <h2 class="text-5xl md:text-7xl font-black tracking-tighter mb-10 leading-none">MODERN<br><span class="italic text-stone-300">ESSENTIALS.</span></h2>
+            <p class="text-stone-500 text-sm max-w-sm mx-auto font-medium">V shop이 엄선한 프리미엄 가전 컬렉션.</p>
         </div>
         <div class="max-w-7xl mx-auto px-6 py-24">
             <div class="flex items-center justify-between mb-16"><h3 class="text-3xl font-black tracking-tighter italic">TOP 5</h3><span class="h-[1px] flex-1 mx-8 bg-gray-100"></span></div>
@@ -56,12 +54,33 @@
         <div id="product-container" class="grid grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-24"></div>
     </section>
 
+    <section id="detail-view" class="hidden py-24 px-6 max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-16">
+            <div class="bg-gray-50 flex items-center justify-center p-12">
+                <img id="detail-img" src="" class="max-w-full h-auto object-contain">
+            </div>
+            <div class="flex flex-col justify-center space-y-8">
+                <div>
+                    <p id="detail-brand" class="text-sm font-black text-gray-400 uppercase tracking-widest mb-4"></p>
+                    <h2 id="detail-name" class="text-4xl font-black tracking-tighter mb-2"></h2>
+                    <p id="detail-price" class="text-2xl font-bold"></p>
+                </div>
+                <div class="h-[1px] bg-gray-100"></div>
+                <p id="detail-desc" class="text-gray-500 leading-relaxed text-sm whitespace-pre-line"></p>
+                <div class="pt-8 space-y-4">
+                    <button onclick="openOrderModal()" class="w-full bg-black text-white py-6 text-xs font-black tracking-widest uppercase hover:bg-gray-900 transition">Purchase Now</button>
+                    <button onclick="showMain()" class="w-full border py-6 text-[10px] font-black tracking-widest uppercase hover:bg-gray-50 transition">Back to Home</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section id="login-view" class="hidden min-h-[70vh] flex items-center justify-center p-6 text-center">
         <div class="w-full max-w-sm space-y-12">
-            <h2 class="text-4xl font-black tracking-tighter italic text-center">SIGN IN</h2>
+            <h2 class="text-4xl font-black tracking-tighter italic">SIGN IN</h2>
             <div class="space-y-4">
                 <input type="text" id="login-id" placeholder="ID" class="w-full border-b-2 border-gray-100 py-4 outline-none focus:border-black text-sm font-bold">
-                <input type="password" id="login-pw" placeholder="PASSWORD" class="w-full border-b-2 border-gray-100 py-4 outline-none focus:border-black text-sm font-bold">
+                <input type="password" id="login-pw" onkeyup="if(event.key === 'Enter') handleLogin()" placeholder="PASSWORD" class="w-full border-b-2 border-gray-100 py-4 outline-none focus:border-black text-sm font-bold">
                 <button onclick="handleLogin()" class="w-full bg-black text-white py-5 text-[11px] font-black tracking-widest mt-8">LOGIN</button>
                 <button onclick="showView('signup')" class="w-full text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-4 underline">Create Account</button>
             </div>
@@ -76,48 +95,15 @@
                 <input type="password" id="reg-pw" placeholder="PASSWORD" class="w-full border-b border-gray-100 py-3 text-sm font-bold outline-none focus:border-black">
                 <input type="text" id="reg-name" placeholder="NAME" class="w-full border-b border-gray-100 py-3 text-sm font-bold outline-none focus:border-black">
                 <input type="text" id="reg-phone" placeholder="PHONE" class="w-full border-b border-gray-100 py-3 text-sm font-bold outline-none focus:border-black">
-                <div class="flex items-center justify-center gap-2 py-4">
-                    <input type="checkbox" id="agree-check">
-                    <label class="text-[10px] text-gray-400 font-bold underline cursor-pointer" onclick="showTermsModal()">이용약관 및 개인정보 처리방침 동의</label>
-                </div>
+                <div class="flex items-center justify-center gap-2 py-4"><input type="checkbox" id="agree-check"><label class="text-[10px] text-gray-400 font-bold underline cursor-pointer" onclick="showTermsModal()">이용약관 동의</label></div>
                 <button onclick="handleSignup()" class="w-full bg-black text-white py-5 text-[11px] font-black tracking-widest">REGISTER</button>
-                <button onclick="showView('login')" class="w-full text-[10px] text-gray-400 font-bold uppercase mt-4">Back to Login</button>
             </div>
         </div>
     </section>
 
-    <div id="terms-modal" class="fixed inset-0 bg-black/90 hidden z-[400] flex items-center justify-center p-6 backdrop-blur-sm">
-        <div class="bg-white w-full max-w-2xl p-10 max-h-[80vh] overflow-y-auto">
-            <h2 class="text-xl font-black mb-6 border-b pb-4">V shop 이용약관</h2>
-            <div class="text-[11px] text-gray-500 leading-relaxed whitespace-pre-line text-left">
-                제1조 (목적)
-                본 약관은 V shop(이하 "몰")이 운영하는 인터넷 사이트에서 제공하는 서비스(이하 "서비스")를 이용함에 있어 몰과 이용자의 권리, 의무 및 책임사항을 규정함을 목적으로 합니다.
-
-                제2조 (회원가입)
-                이용자는 몰이 정한 가입 양식에 따라 회원정보를 기입한 후 본 약관에 동의한다는 의사표시를 함으로써 회원가입을 신청합니다.
-
-                제3조 (재화 등의 공급)
-                1. 몰은 이용자와 재화 등의 공급시기에 관하여 별도의 약정이 없는 이상, 이용자가 청약을 한 날부터 7일 이내에 재화 등을 배송할 수 있도록 필요한 조치를 취합니다.
-                2. 몰은 이용자가 구매한 재화에 대해 배송수단, 수단별 배송비용 부담자, 수단별 배송기간 등을 명시합니다.
-
-                제4조 (청약철회 및 환급)
-                1. 몰과 재화 등의 구매에 관한 계약을 체결한 이용자는 「전자상거래 등에서의 소비자보호에 관한 법률」 제13조 제2항에 따른 계약내용에 관한 서면을 받은 날부터 7일 이내에는 청약의 철회를 할 수 있습니다.
-                2. 이용자는 재화 등을 배송받은 경우 다음 각 호의 1에 해당하는 경우에는 반품 및 교환을 할 수 없습니다.
-                   - 이용자에게 책임 있는 사유로 재화 등이 멸실 또는 훼손된 경우
-                   - 이용자의 사용 또는 일부 소비에 의하여 재화 등의 가치가 현저히 감소한 경우
-                   - 시간의 경과에 의하여 재판매가 곤란할 정도로 재화 등의 가치가 현저히 감소한 경우
-                3. 몰은 이용자로부터 재화 등을 반환받은 경우 3영업일 이내에 이미 지급받은 재화 등의 대금을 환급합니다.
-
-                제5조 (개인정보보호)
-                몰은 이용자의 개인정보 수집 시 서비스 제공을 위하여 필요한 범위에서 최소한의 개인정보를 수집하며, 관련 법령이 정하는 바에 따라 이용자의 개인정보를 보호하기 위해 노력합니다.
-            </div>
-            <button onclick="closeTermsModal()" class="w-full bg-black text-white py-5 text-[11px] font-black tracking-widest mt-8">확인</button>
-        </div>
-    </div>
-
-    <div id="order-modal" class="fixed inset-0 bg-black/90 hidden z-[300] flex items-center justify-center p-6 backdrop-blur-sm">
-        <div class="bg-white w-full max-w-md p-12 shadow-2xl">
-            <h2 id="modal-product-name" class="text-2xl font-black tracking-tighter mb-10 italic text-center">ORDER</h2>
+    <div id="order-modal" class="fixed inset-0 bg-black/90 hidden z-[400] flex items-center justify-center p-6 backdrop-blur-sm">
+        <div class="bg-white w-full max-w-md p-12">
+            <h2 id="modal-product-name" class="text-2xl font-black tracking-tighter mb-10 italic">ORDER</h2>
             <div class="space-y-8">
                 <input type="text" id="order-address" placeholder="SHIPPING ADDRESS" class="w-full border-b-2 border-gray-100 py-3 outline-none focus:border-black text-sm font-bold">
                 <input type="text" id="order-request" placeholder="MESSAGE (Optional)" class="w-full border-b-2 border-gray-100 py-3 outline-none focus:border-black text-sm font-bold">
@@ -131,18 +117,17 @@
 
     <footer class="ssg-header py-32 text-center text-[11px] text-white/40 tracking-widest uppercase font-medium">
         <p class="font-black text-white mb-10 italic text-3xl tracking-tighter">V shop</p>
-        <div class="space-y-2">
-            <p>Representative: YOU SUNG JO</p>
-            <p>Contact: 010-6666-5950</p>
-            <p>Email: victbiz77@gmail.com</p>
-        </div>
-        <p class="mt-20 opacity-20 text-[9px]">© 2026 V shop. ALL RIGHTS RESERVED.</p>
+        <p>Representative: YOU SUNG JO</p>
+        <p>Contact: 010-6666-5950</p>
+        <p>Email: victbiz77@gmail.com</p>
     </footer>
 
     <script>
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyKJIMt3K1yBZrX91R-yOveenkqpLUXQvXm2qg5JzDUgwWaNjvPyndzlMRiR6x-N7iB/exec';
-        let allProducts = [], currentUser = JSON.parse(localStorage.getItem('victshop_user'));
+        let allProducts = [], currentUser = JSON.parse(localStorage.getItem('victshop_user')), currentProductObj = null;
+
         async function init() { updateAuthUI(); await loadProducts(); }
+
         async function loadProducts() {
             try {
                 const res = await fetch(`${WEB_APP_URL}?action=getProducts`);
@@ -160,9 +145,10 @@
                 document.getElementById('top5-container').innerHTML = top5.map(p => createProductCard(p)).join('');
             } catch (e) { console.error(e); }
         }
+
         function createProductCard(p) {
             return `
-                <div class="product-card group cursor-pointer" onclick="openOrderModal('${p.상품명}')">
+                <div class="product-card group cursor-pointer" onclick="showProductDetail('${p.상품명}')">
                     <div class="aspect-[1/1] overflow-hidden bg-gray-50 mb-8"><img src="${p.이미지URL}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"></div>
                     <div class="px-2">
                         <p class="brand-text">${p.브랜드 || 'V COLLECTION'}</p>
@@ -171,38 +157,59 @@
                     </div>
                 </div>`;
         }
-        function showTermsModal() { document.getElementById('terms-modal').classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
-        function closeTermsModal() { document.getElementById('terms-modal').classList.add('hidden'); document.body.style.overflow = 'auto'; }
-        async function handleSignup() {
-            if(!document.getElementById('agree-check').checked) return alert('약관에 동의해 주세요.');
-            const data = { id: document.getElementById('reg-id').value, pw: document.getElementById('reg-pw').value, name: document.getElementById('reg-name').value, phone: document.getElementById('reg-phone').value };
-            if(!data.id || !data.pw || !data.name || !data.phone) return alert('모든 정보를 입력해 주세요.');
-            const res = await fetch(`${WEB_APP_URL}?action=signup&data=${encodeURIComponent(JSON.stringify(data))}`);
-            const text = await res.text();
-            if(text === 'success') { alert('가입 완료! 로그인해 주세요.'); showView('login'); } else { alert('이미 존재하는 ID입니다.'); }
+
+        // [New] 상품 상세 페이지 표시 함수
+        function showProductDetail(name) {
+            currentProductObj = allProducts.find(p => p.상품명 === name);
+            if(!currentProductObj) return;
+
+            document.getElementById('detail-img').src = currentProductObj.이미지URL;
+            document.getElementById('detail-brand').innerText = currentProductObj.브랜드 || 'V COLLECTION';
+            document.getElementById('detail-name').innerText = currentProductObj.상품명;
+            document.getElementById('detail-price').innerText = Number(currentProductObj.가격).toLocaleString() + ' KRW';
+            document.getElementById('detail-desc').innerText = currentProductObj.설명 || '상품 상세 설명이 준비 중입니다.';
+
+            showView('detail');
         }
+
         function filterByCat(cat) { const filtered = allProducts.filter(p => p.카테고리 === cat); renderCategoryView(cat, filtered); }
         function filterBySub(sub) { const filtered = allProducts.filter(p => p.서브카테고리 === sub); renderCategoryView(sub, filtered); }
         function renderCategoryView(title, products) { document.getElementById('category-title').innerText = title; document.getElementById('product-container').innerHTML = products.map(p => createProductCard(p)).join(''); showView('category'); }
+        
         function showMain() { showView('home'); }
-        function showView(view) { ['home-view', 'category-view', 'login-view', 'signup-view'].forEach(id => document.getElementById(id).classList.add('hidden')); document.getElementById(view + '-view').classList.remove('hidden'); window.scrollTo(0,0); }
+        function showView(view) { 
+            ['home-view', 'category-view', 'detail-view', 'login-view', 'signup-view'].forEach(id => document.getElementById(id).classList.add('hidden')); 
+            document.getElementById(view + '-view').classList.remove('hidden'); 
+            window.scrollTo(0,0); 
+        }
+
         async function handleLogin() { 
             const id = document.getElementById('login-id').value; const pw = document.getElementById('login-pw').value;
+            if(!id || !pw) return alert('ID와 비밀번호를 입력해 주세요.');
             const res = await fetch(`${WEB_APP_URL}?action=login&data=${encodeURIComponent(JSON.stringify({id, pw}))}`);
             const data = await res.json();
             if(data.result === 'success') { currentUser = { id, name: data.name, phone: data.phone }; localStorage.setItem('victshop_user', JSON.stringify(currentUser)); location.reload(); } else { alert('로그인 실패'); }
         }
-        function handleLogout() { localStorage.removeItem('victshop_user'); location.reload(); }
-        function updateAuthUI() { if(currentUser) { document.getElementById('user-info').innerText = currentUser.name.toUpperCase(); document.getElementById('user-info').classList.remove('hidden'); document.getElementById('login-btn').classList.add('hidden'); document.getElementById('logout-btn').classList.remove('hidden'); } }
-        function openOrderModal(name) { if(!currentUser) { showView('login'); return; } currentProduct = name; document.getElementById('modal-product-name').innerText = name; document.getElementById('order-modal').classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
+
+        function openOrderModal() {
+            if(!currentUser) { showView('login'); return; }
+            document.getElementById('modal-product-name').innerText = currentProductObj.상품명;
+            document.getElementById('order-modal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
         function closeOrderModal() { document.getElementById('order-modal').classList.add('hidden'); document.body.style.overflow = 'auto'; }
+        
         async function submitOrder() {
             const address = document.getElementById('order-address').value; if(!address) return alert('주소를 입력해 주세요.');
             const btn = document.getElementById('submit-btn'); btn.disabled = true; btn.innerText = 'PROCESSING...';
-            const orderData = { product: currentProduct, name: currentUser.name, phone: currentUser.phone || currentUser.id, address: address, request: document.getElementById('order-request').value };
+            const orderData = { product: currentProductObj.상품명, name: currentUser.name, phone: currentUser.phone || currentUser.id, address: address, request: document.getElementById('order-request').value };
             await fetch(`${WEB_APP_URL}?action=addOrder&data=${encodeURIComponent(JSON.stringify(orderData))}`);
             alert('주문 완료'); location.reload();
         }
+
+        function updateAuthUI() { if(currentUser) { document.getElementById('user-info').innerText = currentUser.name.toUpperCase(); document.getElementById('user-info').classList.remove('hidden'); document.getElementById('login-btn').classList.add('hidden'); document.getElementById('logout-btn').classList.remove('hidden'); } }
+        function handleLogout() { localStorage.removeItem('victshop_user'); location.reload(); }
         init();
     </script>
 </body>

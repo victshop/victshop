@@ -9,17 +9,25 @@
     <style>
         body { font-family: 'Pretendard', sans-serif; background-color: #ffffff; color: #000; word-break: keep-all; }
         .hidden { display: none; }
+        
+        /* 신세계 스타일 블랙 헤더 */
         .ssg-header { background-color: #000000; color: #ffffff; }
         .nav-link { color: #ffffff; opacity: 0.7; transition: opacity 0.3s; }
         .nav-link:hover { opacity: 1; }
         .active-dot::after { content: ''; display: block; width: 4px; height: 4px; background: #fff; border-radius: 50%; margin: 4px auto 0; }
+
+        /* 상품 카드: 테두리 없는 갤러리 스타일 */
         .product-card { background: #ffffff; border: none !important; transition: transform 0.3s ease; }
         .brand-text { font-size: 14px; font-weight: 900; letter-spacing: -0.02em; text-transform: uppercase; margin-bottom: 4px; }
         .price-text { font-size: 16px; font-weight: 800; color: #000; margin-top: 8px; }
+        
+        /* 드롭다운 메뉴 */
         .dropdown-menu { display: none; position: absolute; top: 100%; left: 0; background: #111; min-width: 200px; padding: 10px 0; z-index: 100; border: 1px solid #333; }
         .nav-item:hover .dropdown-menu { display: block; }
-        /* 수량 조절기 스타일 */
-        .qty-btn { width: 32px; height: 32px; border: 1px solid #e5e7eb; display: flex; items-center; justify-center; font-weight: bold; }
+        
+        /* 수량 조절 */
+        .qty-btn { width: 32px; height: 32px; border: 1px solid #e5e7eb; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+        
         ::-webkit-scrollbar { display: none; }
     </style>
 </head>
@@ -40,9 +48,29 @@
     </header>
 
     <section id="home-view">
+        <div class="bg-stone-50 py-32 border-b border-gray-100 text-center">
+            <p class="text-[10px] font-black tracking-[0.4em] text-stone-400 mb-6 uppercase">Selected by Seungjo</p>
+            <h2 class="text-5xl md:text-7xl font-black tracking-tighter mb-10 leading-none">
+                ESSENTIALS FOR<br><span class="italic text-stone-300">MODERN LIFE.</span>
+            </h2>
+            <div class="h-[2px] w-20 bg-gray-900 mx-auto mb-10"></div>
+            <p class="text-stone-500 text-sm max-w-sm mx-auto font-medium">V shop이 제안하는 감각적인 라이프스타일 컬렉션.</p>
+        </div>
         <div class="max-w-7xl mx-auto px-6 py-24">
+            <div class="flex items-center justify-between mb-16">
+                <h3 class="text-3xl font-black tracking-tighter italic">V shop's TOP 5</h3>
+                <span class="h-[1px] flex-1 mx-8 bg-gray-100"></span>
+            </div>
             <div id="top5-container" class="grid grid-cols-1 md:grid-cols-5 gap-10"></div>
         </div>
+    </section>
+
+    <section id="category-view" class="hidden py-24 px-6 max-w-7xl mx-auto">
+        <div class="text-center mb-20 border-b border-gray-100 pb-10">
+            <h2 id="category-title" class="text-4xl font-black tracking-tighter uppercase italic mb-4">CATEGORY</h2>
+            <p class="text-gray-400 text-[11px] font-bold tracking-[0.2em]">EXPLORE COLLECTION</p>
+        </div>
+        <div id="product-container" class="grid grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-24"></div>
     </section>
 
     <section id="detail-view" class="hidden py-12 px-6 max-w-7xl mx-auto">
@@ -51,45 +79,58 @@
                 <img id="detail-img" src="" class="max-w-full h-auto">
             </div>
             <div class="flex flex-col justify-center">
-                <p id="detail-brand" class="text-[13px] font-black text-gray-400 uppercase tracking-widest mb-4"></p>
+                <p id="detail-brand" class="brand-text text-gray-400 mb-4"></p>
                 <h2 id="detail-name" class="text-3xl font-black tracking-tighter mb-4"></h2>
                 <div class="flex items-baseline gap-2 mb-8">
                     <span id="detail-price-val" class="text-2xl font-black"></span>
                     <span class="text-sm font-bold text-gray-400">KRW</span>
                 </div>
-                
                 <div class="border-t border-b border-gray-100 py-8 space-y-6">
                     <div class="flex items-center justify-between">
                         <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">Quantity</span>
                         <div class="flex items-center border border-gray-200">
                             <button onclick="changeQty(-1)" class="qty-btn hover:bg-gray-50">-</button>
-                            <input type="text" id="order-qty" value="1" readonly class="w-12 text-center text-sm font-bold outline-none">
+                            <input type="text" id="order-qty" value="1" readonly class="w-12 text-center text-sm font-bold">
                             <button onclick="changeQty(1)" class="qty-btn hover:bg-gray-50">+</button>
                         </div>
                     </div>
                     <div class="flex items-center justify-between pt-4">
-                        <span class="text-xs font-bold text-gray-900">Total Price</span>
-                        <span id="total-price-display" class="text-xl font-black text-black"></span>
+                        <span class="text-xs font-bold text-gray-900 uppercase">Total Price</span>
+                        <span id="total-price-display" class="text-xl font-black"></span>
                     </div>
                 </div>
-
                 <div class="grid grid-cols-2 gap-3 pt-10">
-                    <button onclick="addToCart()" class="border-2 border-black py-5 text-[11px] font-black tracking-widest uppercase hover:bg-gray-50 transition">Add to Cart</button>
-                    <button onclick="openOrderModal()" class="bg-black text-white py-5 text-[11px] font-black tracking-widest uppercase hover:bg-gray-800 transition">Buy Now</button>
+                    <button onclick="alert('장바구니에 담겼습니다.')" class="border-2 border-black py-5 text-[11px] font-black tracking-widest uppercase hover:bg-gray-50">Add to Cart</button>
+                    <button onclick="openOrderModal()" class="bg-black text-white py-5 text-[11px] font-black tracking-widest uppercase hover:bg-gray-800">Buy Now</button>
                 </div>
             </div>
         </div>
+        <div id="detail-long-container" class="border-t border-gray-100 pt-20 max-w-4xl mx-auto">
+            <img id="detail-long-img" src="" class="w-full h-auto">
+        </div>
+    </section>
 
-        <div class="border-t border-gray-100 pt-20">
-            <div class="max-w-4xl mx-auto">
-                <div class="flex items-center justify-center gap-4 mb-12">
-                    <span class="h-[1px] w-12 bg-gray-200"></span>
-                    <span class="text-[11px] font-black tracking-[0.3em] text-gray-400 uppercase">Product Detail</span>
-                    <span class="h-[1px] w-12 bg-gray-200"></span>
-                </div>
-                <div id="detail-long-container" class="w-full">
-                    <img id="detail-long-img" src="" class="w-full h-auto">
-                </div>
+    <section id="login-view" class="hidden min-h-[70vh] flex items-center justify-center p-6 text-center">
+        <div class="w-full max-w-sm space-y-12">
+            <h2 class="text-4xl font-black tracking-tighter italic">SIGN IN</h2>
+            <div class="space-y-4">
+                <input type="text" id="login-id" placeholder="ID" class="w-full border-b-2 border-gray-100 py-4 outline-none focus:border-black text-sm font-bold">
+                <input type="password" id="login-pw" onkeyup="if(event.key === 'Enter') handleLogin()" placeholder="PASSWORD" class="w-full border-b-2 border-gray-100 py-4 outline-none focus:border-black text-sm font-bold">
+                <button onclick="handleLogin()" class="w-full bg-black text-white py-5 text-[11px] font-black tracking-widest mt-8">LOGIN</button>
+                <button onclick="showView('signup')" class="w-full text-[10px] text-gray-400 font-bold uppercase mt-4 underline">Create Account</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="signup-view" class="hidden min-h-[70vh] flex items-center justify-center p-6 text-center">
+        <div class="w-full max-w-sm space-y-10">
+            <h2 class="text-4xl font-black tracking-tighter italic">JOIN US</h2>
+            <div class="space-y-4">
+                <input type="text" id="reg-id" placeholder="ID" class="w-full border-b border-gray-100 py-3 text-sm font-bold outline-none focus:border-black">
+                <input type="password" id="reg-pw" placeholder="PASSWORD" class="w-full border-b border-gray-100 py-3 text-sm font-bold outline-none focus:border-black">
+                <input type="text" id="reg-name" placeholder="NAME" class="w-full border-b border-gray-100 py-3 text-sm font-bold outline-none focus:border-black">
+                <input type="text" id="reg-phone" placeholder="PHONE" class="w-full border-b border-gray-100 py-3 text-sm font-bold outline-none focus:border-black">
+                <button onclick="handleSignup()" class="w-full bg-black text-white py-5 text-[11px] font-black tracking-widest mt-8">REGISTER</button>
             </div>
         </div>
     </section>
@@ -97,23 +138,24 @@
     <div id="order-modal" class="fixed inset-0 bg-black/90 hidden z-[300] flex items-center justify-center p-6 backdrop-blur-sm">
         <div class="bg-white w-full max-w-md p-12">
             <h2 id="modal-product-name" class="text-2xl font-black tracking-tighter mb-8 italic">CHECKOUT</h2>
-            <p id="modal-order-summary" class="text-[11px] text-gray-400 mb-8 border-b pb-4 font-bold"></p>
             <div class="space-y-6">
                 <input type="text" id="order-address" placeholder="SHIPPING ADDRESS" class="w-full border-b-2 border-gray-100 py-3 outline-none focus:border-black text-sm font-bold">
-                <input type="text" id="order-request" placeholder="MESSAGE" class="w-full border-b-2 border-gray-100 py-3 outline-none focus:border-black text-sm font-bold">
+                <input type="text" id="order-request" placeholder="MESSAGE (Optional)" class="w-full border-b-2 border-gray-100 py-3 outline-none focus:border-black text-sm font-bold">
             </div>
-            <div class="flex gap-3 mt-12">
+            <div class="flex gap-4 mt-12">
                 <button onclick="closeOrderModal()" class="flex-1 py-5 border-2 border-gray-100 text-[11px] font-bold uppercase">Close</button>
-                <button onclick="submitOrder()" id="submit-btn" class="flex-1 bg-black text-white py-5 text-[11px] font-black uppercase">Confirm Order</button>
+                <button onclick="submitOrder()" id="submit-btn" class="flex-1 bg-black text-white py-5 text-[11px] font-black uppercase">Confirm</button>
             </div>
         </div>
     </div>
 
     <footer class="ssg-header py-32 text-center text-[11px] text-white/40 tracking-widest uppercase font-medium">
         <p class="font-black text-white mb-10 italic text-3xl tracking-tighter">V shop</p>
-        <p>Representative: YOU SUNG JO</p>
-        <p>Contact: 010-6666-5950</p>
-        <p>Email: victbiz77@gmail.com</p>
+        <div class="space-y-2">
+            <p>Representative: YOU SUNG JO</p>
+            <p>Contact: 010-6666-5950</p>
+            <p>Email: victbiz77@gmail.com</p>
+        </div>
     </footer>
 
     <script>
@@ -123,13 +165,11 @@
         async function init() { updateAuthUI(); await loadProducts(); }
 
         async function loadProducts() {
-            try {
-                const res = await fetch(`${WEB_APP_URL}?action=getProducts`);
-                allProducts = await res.json();
-                renderNav();
-                const top5 = allProducts.filter(p => String(p.TOP5).toUpperCase() === 'Y').slice(0,5);
-                document.getElementById('top5-container').innerHTML = top5.map(p => createProductCard(p)).join('');
-            } catch (e) { console.error(e); }
+            const res = await fetch(`${WEB_APP_URL}?action=getProducts`);
+            allProducts = await res.json();
+            renderNav();
+            const top5 = allProducts.filter(p => String(p.TOP5).toUpperCase() === 'Y').slice(0,5);
+            document.getElementById('top5-container').innerHTML = top5.map(p => createProductCard(p)).join('');
         }
 
         function createProductCard(p) {
@@ -145,54 +185,31 @@
 
         function showProductDetail(name) {
             currentProductObj = allProducts.find(p => p.상품명 === name);
-            if(!currentProductObj) return;
             currentQty = 1; document.getElementById('order-qty').value = 1;
-            
             document.getElementById('detail-img').src = currentProductObj.이미지URL;
             document.getElementById('detail-brand').innerText = currentProductObj.브랜드 || 'V COLLECTION';
             document.getElementById('detail-name').innerText = currentProductObj.상품명;
             document.getElementById('detail-price-val').innerText = Number(currentProductObj.가격).toLocaleString();
-            
-            // 상세 이미지 처리
-            const longImg = document.getElementById('detail-long-img');
-            if(currentProductObj.상세이미지URL) {
-                longImg.src = currentProductObj.상세이미지URL;
-                document.getElementById('detail-long-container').classList.remove('hidden');
-            } else {
-                document.getElementById('detail-long-container').classList.add('hidden');
-            }
-
-            updateTotalPrice();
-            showView('detail');
+            document.getElementById('detail-long-img').src = currentProductObj.상세이미지URL || '';
+            updateTotalPrice(); showView('detail');
         }
 
-        function changeQty(val) {
-            currentQty = Math.max(1, currentQty + val);
-            document.getElementById('order-qty').value = currentQty;
-            updateTotalPrice();
+        function changeQty(val) { currentQty = Math.max(1, currentQty + val); document.getElementById('order-qty').value = currentQty; updateTotalPrice(); }
+        function updateTotalPrice() { document.getElementById('total-price-display').innerText = (currentProductObj.가격 * currentQty).toLocaleString() + ' KRW'; }
+
+        function filterByCat(cat) { const filtered = allProducts.filter(p => p.카테고리 === cat); renderCategoryView(cat, filtered); }
+        function filterBySub(sub) { const filtered = allProducts.filter(p => p.서브카테고리 === sub); renderCategoryView(sub, filtered); }
+        function renderCategoryView(title, products) { document.getElementById('category-title').innerText = title; document.getElementById('product-container').innerHTML = products.map(p => createProductCard(p)).join(''); showView('category'); }
+
+        function showMain() { showView('home'); }
+        function showView(view) {
+            ['home-view', 'category-view', 'detail-view', 'login-view', 'signup-view'].forEach(id => document.getElementById(id).classList.add('hidden'));
+            document.getElementById(view + '-view').classList.remove('hidden');
+            window.scrollTo(0,0);
         }
 
-        function updateTotalPrice() {
-            const total = currentProductObj.가격 * currentQty;
-            document.getElementById('total-price-display').innerText = total.toLocaleString() + ' KRW';
-        }
-
-        function addToCart() {
-            alert(`${currentProductObj.상품명} ${currentQty}개가 장바구니에 담겼습니다.`);
-        }
-
-        function openOrderModal() {
-            if(!currentUser) { showView('login'); return; }
-            document.getElementById('modal-product-name').innerText = currentProductObj.상품명;
-            document.getElementById('modal-order-summary').innerText = `수량: ${currentQty}개 / 총 금액: ${document.getElementById('total-price-display').innerText}`;
-            document.getElementById('order-modal').classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-        }
-
-        // 네비게이션/로그인/주문 제출 등 나머지 로직 동일 유지
         function renderNav() {
-            const navData = {};
-            allProducts.forEach(p => { if(p.카테고리) { if(!navData[p.카테고리]) navData[p.카테고리] = new Set(); if(p.서브카테고리) navData[p.카테고리].add(p.서브카테고리); }});
+            const navData = {}; allProducts.forEach(p => { if(p.카테고리) { if(!navData[p.카테고리]) navData[p.카테고리] = new Set(); if(p.서브카테고리) navData[p.카테고리].add(p.서브카테고리); }});
             document.getElementById('main-nav').innerHTML = Object.keys(navData).map(cat => `
                 <div class="nav-item relative h-full flex items-center group">
                     <button class="text-[12px] font-bold nav-link h-full uppercase" onclick="filterByCat('${cat}')">${cat}</button>
@@ -201,19 +218,29 @@
                     </div>
                 </div>`).join('');
         }
-        function closeOrderModal() { document.getElementById('order-modal').classList.add('hidden'); document.body.style.overflow = 'auto'; }
+
+        async function handleLogin() {
+            const id = document.getElementById('login-id').value; const pw = document.getElementById('login-pw').value;
+            const res = await fetch(`${WEB_APP_URL}?action=login&data=${encodeURIComponent(JSON.stringify({id, pw}))}`);
+            const data = await res.json();
+            if(data.result === 'success') { currentUser = { id, name: data.name, phone: data.phone }; localStorage.setItem('victshop_user', JSON.stringify(currentUser)); location.reload(); } else { alert('로그인 실패'); }
+        }
+
+        async function handleSignup() {
+            const data = { id: document.getElementById('reg-id').value, pw: document.getElementById('reg-pw').value, name: document.getElementById('reg-name').value, phone: document.getElementById('reg-phone').value };
+            const res = await fetch(`${WEB_APP_URL}?action=signup&data=${encodeURIComponent(JSON.stringify(data))}`);
+            const text = await res.text();
+            if(text === 'success') { alert('가입 완료! 로그인해 주세요.'); showView('login'); } else { alert('이미 존재하는 ID입니다.'); }
+        }
+
+        function openOrderModal() { if(!currentUser) { showView('login'); return; } document.getElementById('order-modal').classList.remove('hidden'); }
+        function closeOrderModal() { document.getElementById('order-modal').classList.add('hidden'); }
         async function submitOrder() {
-            const address = document.getElementById('order-address').value; if(!address) return alert('주소를 입력해 주세요.');
-            const btn = document.getElementById('submit-btn'); btn.disabled = true; btn.innerText = 'PROCESSING...';
-            const orderData = { product: `${currentProductObj.상품명} (${currentQty}개)`, name: currentUser.name, phone: currentUser.phone || currentUser.id, address: address, request: document.getElementById('order-request').value };
+            const orderData = { product: `${currentProductObj.상품명} (${currentQty}개)`, name: currentUser.name, phone: currentUser.phone || currentUser.id, address: document.getElementById('order-address').value, request: document.getElementById('order-request').value };
             await fetch(`${WEB_APP_URL}?action=addOrder&data=${encodeURIComponent(JSON.stringify(orderData))}`);
-            alert('주문이 성공적으로 접수되었습니다.'); location.reload();
+            alert('주문 완료'); location.reload();
         }
-        function showMain() { showView('home'); }
-        function showView(view) { 
-            ['home-view', 'category-view', 'detail-view', 'login-view', 'signup-view'].forEach(id => document.getElementById(id).classList.add('hidden')); 
-            document.getElementById(view + '-view').classList.remove('hidden'); window.scrollTo(0,0); 
-        }
+
         function updateAuthUI() { if(currentUser) { document.getElementById('user-info').innerText = currentUser.name.toUpperCase(); document.getElementById('user-info').classList.remove('hidden'); document.getElementById('login-btn').classList.add('hidden'); document.getElementById('logout-btn').classList.remove('hidden'); } }
         function handleLogout() { localStorage.removeItem('victshop_user'); location.reload(); }
         init();

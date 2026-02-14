@@ -9,82 +9,79 @@
     <style>
         body { font-family: 'Pretendard', sans-serif; background-color: #ffffff; color: #000; word-break: keep-all; }
         .hidden { display: none; }
-        
-        /* [New] 신세계 면세점 스타일 블랙 헤더 */
         .ssg-header { background-color: #000000; color: #ffffff; }
         .nav-link { color: #ffffff; opacity: 0.7; transition: opacity 0.3s; }
         .nav-link:hover { opacity: 1; }
         .active-dot::after { content: ''; display: block; width: 4px; height: 4px; background: #fff; border-radius: 50%; margin: 4px auto 0; }
-
-        /* [New] 상품 카드 스타일 (테두리 제거, 브랜드 강조) */
         .product-card { background: #ffffff; border: none !important; transition: transform 0.3s ease; }
         .brand-text { font-size: 14px; font-weight: 900; letter-spacing: -0.02em; text-transform: uppercase; margin-bottom: 4px; }
         .price-text { font-size: 16px; font-weight: 800; color: #000; margin-top: 8px; }
-        
-        .hero-section { background-color: #f8f8f8; }
-        .dropdown-menu { display: none; position: absolute; top: 100%; left: 0; background: #111; min-width: 200px; padding: 10px 0; z-index: 100; }
+        .dropdown-menu { display: none; position: absolute; top: 100%; left: 0; background: #111; min-width: 200px; padding: 10px 0; z-index: 100; border: 1px solid #333; }
         .nav-item:hover .dropdown-menu { display: block; }
-        .dropdown-item:hover { background: #222; }
-
         ::-webkit-scrollbar { display: none; }
     </style>
 </head>
 <body>
-    <header class="sticky top-0 z-[200] ssg-header">
+    <header class="sticky top-0 z-[200] ssg-header shadow-xl">
         <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
             <h1 class="text-2xl font-black tracking-tighter cursor-pointer" onclick="location.reload()">V shop</h1>
             <div class="flex items-center gap-6 text-[11px] font-bold uppercase tracking-widest">
-                <span id="user-info" class="hidden text-white"></span>
+                <span id="user-info" class="hidden text-white font-black"></span>
                 <button id="login-btn" onclick="showView('login')" class="nav-link">Sign In</button>
                 <button id="logout-btn" class="hidden nav-link" onclick="handleLogout()">Logout</button>
             </div>
         </div>
         <nav class="max-w-7xl mx-auto px-6 h-12 flex gap-8 items-center border-t border-white/10 overflow-visible">
             <button class="text-[12px] font-bold nav-link active-dot" onclick="showMain()">HOME</button>
-            <div id="main-nav" class="flex gap-8 h-full items-center">
-                </div>
+            <div id="main-nav" class="flex gap-8 h-full items-center"></div>
         </nav>
     </header>
 
     <section id="home-view">
-        <div class="hero-section py-32 border-b border-gray-100">
+        <div class="bg-stone-50 py-32 border-b border-gray-100">
             <div class="max-w-7xl mx-auto px-6 text-center">
-                <p class="text-[10px] font-black tracking-[0.4em] text-gray-400 mb-6 uppercase">Editor's Choice</p>
-                <h2 class="text-5xl md:text-7xl font-black tracking-tighter mb-10 leading-none">
-                    ESSENTIALS FOR<br><span class="italic text-gray-300">MODERN LIFE.</span>
-                </h2>
-                <p class="text-gray-500 text-sm max-w-sm mx-auto font-medium leading-relaxed">
-                    V shop이 제안하는 감각적인 라이프스타일.<br>엄선된 TOP 5 아이템을 확인하세요.
-                </p>
+                <p class="text-[10px] font-black tracking-[0.4em] text-stone-400 mb-6 uppercase">Selected by V</p>
+                <h2 class="text-5xl md:text-7xl font-black tracking-tighter mb-10 leading-none">MODERN<br><span class="italic text-stone-300">ESSENTIALS.</span></h2>
+                <p class="text-stone-500 text-sm max-w-sm mx-auto font-medium leading-relaxed">V shop이 큐레이션한 프리미엄 컬렉션.<br>지금 가장 주목받는 TOP 5 제품입니다.</p>
             </div>
         </div>
-
         <div class="max-w-7xl mx-auto px-6 py-24">
-            <div class="flex items-center justify-between mb-16">
-                <h3 class="text-3xl font-black tracking-tighter italic">V shop's TOP 5</h3>
-                <span class="h-[1px] flex-1 mx-8 bg-gray-100"></span>
-            </div>
-            <div id="top5-container" class="grid grid-cols-1 md:grid-cols-5 gap-10">
-                </div>
+            <div class="flex items-center justify-between mb-16"><h3 class="text-3xl font-black tracking-tighter italic">TOP 5</h3><span class="h-[1px] flex-1 mx-8 bg-gray-100"></span></div>
+            <div id="top5-container" class="grid grid-cols-1 md:grid-cols-5 gap-10"></div>
         </div>
     </section>
 
     <section id="category-view" class="hidden py-24 px-6 max-w-7xl mx-auto">
-        <div class="text-center mb-20">
-            <h2 id="category-title" class="text-4xl font-black tracking-tighter uppercase italic mb-4">CATEGORY</h2>
-            <p class="text-gray-400 text-[11px] font-bold tracking-[0.2em]">EXPLORE COLLECTION</p>
-        </div>
-        <div id="product-container" class="grid grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-24">
-            </div>
+        <h2 id="category-title" class="text-4xl font-black tracking-tighter uppercase italic text-center mb-20">CATEGORY</h2>
+        <div id="product-container" class="grid grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-24"></div>
     </section>
 
     <section id="login-view" class="hidden min-h-[70vh] flex items-center justify-center p-6">
         <div class="w-full max-w-sm space-y-12">
-            <div class="text-center"><h2 class="text-4xl font-black tracking-tighter italic">V shop</h2></div>
+            <h2 class="text-4xl font-black tracking-tighter italic text-center">SIGN IN</h2>
             <div class="space-y-4">
                 <input type="text" id="login-id" placeholder="ID" class="w-full border-b-2 border-gray-100 py-4 outline-none focus:border-black text-sm font-bold">
                 <input type="password" id="login-pw" placeholder="PASSWORD" class="w-full border-b-2 border-gray-100 py-4 outline-none focus:border-black text-sm font-bold">
-                <button onclick="handleLogin()" class="w-full bg-black text-white py-5 text-[11px] font-black tracking-widest mt-8">SIGN IN</button>
+                <button onclick="handleLogin()" class="w-full bg-black text-white py-5 text-[11px] font-black tracking-widest mt-8">LOGIN</button>
+                <button onclick="showView('signup')" class="w-full text-[10px] text-gray-400 font-bold uppercase tracking-widest text-center mt-4 underline">Create Account</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="signup-view" class="hidden min-h-[70vh] flex items-center justify-center p-6">
+        <div class="w-full max-w-sm space-y-10">
+            <h2 class="text-4xl font-black tracking-tighter italic text-center">JOIN US</h2>
+            <div class="space-y-4">
+                <input type="text" id="reg-id" placeholder="ID" class="w-full border-b border-gray-100 py-3 text-sm font-bold outline-none focus:border-black">
+                <input type="password" id="reg-pw" placeholder="PASSWORD" class="w-full border-b border-gray-100 py-3 text-sm font-bold outline-none focus:border-black">
+                <input type="text" id="reg-name" placeholder="NAME" class="w-full border-b border-gray-100 py-3 text-sm font-bold outline-none focus:border-black">
+                <input type="text" id="reg-phone" placeholder="PHONE (010-0000-0000)" class="w-full border-b border-gray-100 py-3 text-sm font-bold outline-none focus:border-black">
+                <div class="flex items-center gap-2 py-4">
+                    <input type="checkbox" id="agree-check">
+                    <label class="text-[10px] text-gray-400 font-bold underline cursor-pointer">이용약관 및 개인정보 처리방침 동의</label>
+                </div>
+                <button onclick="handleSignup()" class="w-full bg-black text-white py-5 text-[11px] font-black tracking-widest">REGISTER</button>
+                <button onclick="showView('login')" class="w-full text-[10px] text-gray-400 font-bold uppercase text-center mt-4">Back to Login</button>
             </div>
         </div>
     </section>
@@ -106,11 +103,10 @@
     <footer class="ssg-header py-32 text-center text-[11px] text-white/40 tracking-widest uppercase font-medium">
         <p class="font-black text-white mb-10 italic text-3xl tracking-tighter">V shop</p>
         <div class="space-y-2">
-            <p>Representative: YOU SUNG JO (유승조)</p>
+            <p>Representative: YOU SUNG JO</p>
             <p>Contact: 010-6666-5950</p>
             <p>Email: victbiz77@gmail.com</p>
         </div>
-        <p class="mt-20 opacity-20 text-[9px]">© 2026 V shop. ALL RIGHTS RESERVED.</p>
     </footer>
 
     <script>
@@ -123,18 +119,15 @@
             try {
                 const res = await fetch(`${WEB_APP_URL}?action=getProducts`);
                 allProducts = await res.json();
-                
                 const navData = {};
                 allProducts.forEach(p => { if(p.카테고리) { if(!navData[p.카테고리]) navData[p.카테고리] = new Set(); if(p.서브카테고리) navData[p.카테고리].add(p.서브카테고리); }});
-
                 document.getElementById('main-nav').innerHTML = Object.keys(navData).map(cat => `
-                    <div class="nav-item relative h-full flex items-center">
-                        <button class="text-[12px] font-bold nav-link h-full" onclick="filterByCat('${cat}')">${cat.toUpperCase()}</button>
+                    <div class="nav-item relative h-full flex items-center group">
+                        <button class="text-[12px] font-bold nav-link h-full uppercase" onclick="filterByCat('${cat}')">${cat}</button>
                         <div class="dropdown-menu">
                             ${Array.from(navData[cat]).map(sub => `<button class="block w-full text-left px-6 py-3 text-[11px] text-white/60 hover:text-white font-bold uppercase" onclick="filterBySub('${sub}')">${sub}</button>`).join('')}
                         </div>
                     </div>`).join('');
-                
                 const top5 = allProducts.filter(p => String(p.TOP5).toUpperCase() === 'Y').slice(0,5);
                 document.getElementById('top5-container').innerHTML = top5.map(p => createProductCard(p)).join('');
             } catch (e) { console.error(e); }
@@ -143,30 +136,42 @@
         function createProductCard(p) {
             return `
                 <div class="product-card group cursor-pointer" onclick="openOrderModal('${p.상품명}')">
-                    <div class="aspect-[1/1] overflow-hidden bg-gray-50 mb-8">
-                        <img src="${p.이미지URL}" alt="${p.상품명}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                    </div>
+                    <div class="aspect-[1/1] overflow-hidden bg-gray-50 mb-8"><img src="${p.이미지URL}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"></div>
                     <div class="px-2">
-                        <p class="brand-text text-black">${p.브랜드 || 'V shop'}</p>
+                        <p class="brand-text">${p.브랜드 || 'V COLLECTION'}</p>
                         <h3 class="text-[14px] font-medium text-gray-500 line-clamp-1 mb-2">${p.상품명}</h3>
                         <p class="price-text">${Number(p.가격).toLocaleString()} KRW</p>
                     </div>
                 </div>`;
         }
 
+        async function handleSignup() {
+            if(!document.getElementById('agree-check').checked) return alert('약관에 동의해 주세요.');
+            const data = { id: document.getElementById('reg-id').value, pw: document.getElementById('reg-pw').value, name: document.getElementById('reg-name').value, phone: document.getElementById('reg-phone').value };
+            if(!data.id || !data.pw || !data.name || !data.phone) return alert('모든 정보를 입력해 주세요.');
+            const res = await fetch(`${WEB_APP_URL}?action=signup&data=${encodeURIComponent(JSON.stringify(data))}`);
+            const text = await res.text();
+            if(text === 'success') { alert('가입 완료! 로그인해 주세요.'); showView('login'); } else { alert('이미 존재하는 ID입니다.'); }
+        }
+
         function filterByCat(cat) { const filtered = allProducts.filter(p => p.카테고리 === cat); renderCategoryView(cat, filtered); }
         function filterBySub(sub) { const filtered = allProducts.filter(p => p.서브카테고리 === sub); renderCategoryView(sub, filtered); }
         function renderCategoryView(title, products) { document.getElementById('category-title').innerText = title; document.getElementById('product-container').innerHTML = products.map(p => createProductCard(p)).join(''); showView('category'); }
         function showMain() { showView('home'); }
-        function showView(view) { ['home-view', 'category-view', 'login-view'].forEach(id => document.getElementById(id).classList.add('hidden')); document.getElementById(view + '-view').classList.remove('hidden'); window.scrollTo(0,0); }
-        async function handleLogin() { const id = document.getElementById('login-id').value; const pw = document.getElementById('login-pw').value; const res = await fetch(`${WEB_APP_URL}?action=login&data=${encodeURIComponent(JSON.stringify({id, pw}))}`); const data = await res.json(); if(data.result === 'success') { currentUser = { id, name: data.name, phone: data.phone }; localStorage.setItem('victshop_user', JSON.stringify(currentUser)); location.reload(); } else { alert('Login Failed'); } }
+        function showView(view) { ['home-view', 'category-view', 'login-view', 'signup-view'].forEach(id => document.getElementById(id).classList.add('hidden')); document.getElementById(view + '-view').classList.remove('hidden'); window.scrollTo(0,0); }
+        async function handleLogin() { 
+            const id = document.getElementById('login-id').value; const pw = document.getElementById('login-pw').value;
+            const res = await fetch(`${WEB_APP_URL}?action=login&data=${encodeURIComponent(JSON.stringify({id, pw}))}`);
+            const data = await res.json();
+            if(data.result === 'success') { currentUser = { id, name: data.name, phone: data.phone }; localStorage.setItem('victshop_user', JSON.stringify(currentUser)); location.reload(); } else { alert('로그인 실패'); }
+        }
         function handleLogout() { localStorage.removeItem('victshop_user'); location.reload(); }
         function updateAuthUI() { if(currentUser) { document.getElementById('user-info').innerText = currentUser.name.toUpperCase(); document.getElementById('user-info').classList.remove('hidden'); document.getElementById('login-btn').classList.add('hidden'); document.getElementById('logout-btn').classList.remove('hidden'); } }
         function openOrderModal(name) { if(!currentUser) { showView('login'); return; } currentProduct = name; document.getElementById('modal-product-name').innerText = name; document.getElementById('order-modal').classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
         function closeOrderModal() { document.getElementById('order-modal').classList.add('hidden'); document.body.style.overflow = 'auto'; }
         async function submitOrder() {
-            const address = document.getElementById('order-address').value; if(!address) return alert('Enter address.');
-            const btn = document.getElementById('submit-btn'); btn.disabled = true; btn.innerText = 'PROCESSING...';
+            const address = document.getElementById('order-address').value; if(!address) return alert('주소를 입력해 주세요.');
+            const btn = document.getElementById('submit-btn'); btn.disabled = true; btn.innerText = 'SENDING...';
             const orderData = { product: currentProduct, name: currentUser.name, phone: currentUser.phone || currentUser.id, address: address, request: document.getElementById('order-request').value };
             await fetch(`${WEB_APP_URL}?action=addOrder&data=${encodeURIComponent(JSON.stringify(orderData))}`);
             alert('주문 완료'); location.reload();

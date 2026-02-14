@@ -5,113 +5,171 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VICT SHOP</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
     <style>
-        body { font-family: 'Pretendard', sans-serif; }
+        body { font-family: 'Pretendard', sans-serif; word-break: keep-all; }
         .hidden { display: none; }
-        .product-img { aspect-ratio: 3 / 4; object-fit: cover; transition: transform 0.5s; }
-        .product-card:hover .product-img { transform: scale(1.03); }
+        .hero-gradient { background: linear-gradient(to bottom, #f9f9f9, #ffffff); }
+        .product-card img { transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+        .product-card:hover img { transform: scale(1.05); }
+        
+        /* 드롭다운 네비게이션 스타일 */
+        .nav-item:hover .dropdown-menu { display: block; }
+        .dropdown-menu { display: none; position: absolute; top: 100%; left: 0; background: white; min-width: 180px; box-shadow: 0 15px 30px -5px rgba(0,0,0,0.1); border: 1px solid #f3f4f6; z-index: 50; }
+        .dropdown-item:hover { background-color: #f9fafb; color: #000; }
+        
+        ::-webkit-scrollbar { display: none; }
     </style>
 </head>
 <body class="bg-white text-gray-900">
-    <header class="border-b sticky top-0 bg-white/80 backdrop-blur-md z-50">
-        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-            <h1 class="text-xl font-bold tracking-[0.2em] cursor-pointer" onclick="showView('shop')">VICT SHOP</h1>
-            <div id="auth-buttons" class="text-[10px] uppercase tracking-widest space-x-4">
-                <span id="user-name-tag" class="text-black font-bold"></span>
-                <button id="login-nav-btn" onclick="showView('login')" class="text-gray-400">Login</button>
-                <button id="logout-nav-btn" onclick="handleLogout()" class="text-gray-400 hidden">Logout</button>
+    <header class="sticky top-0 bg-white/95 backdrop-blur-md z-[100] border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <h1 class="text-2xl font-black tracking-tighter cursor-pointer" onclick="location.reload()">VICT SHOP</h1>
+            <div class="flex items-center gap-6 text-[11px] font-bold uppercase tracking-widest text-gray-400">
+                <div id="user-info" class="hidden text-black font-black"></div>
+                <button id="login-btn" onclick="showView('login')">Login</button>
+                <button id="logout-btn" class="hidden" onclick="handleLogout()">Logout</button>
             </div>
         </div>
+        
+        <nav class="max-w-7xl mx-auto px-6 border-t border-gray-50 flex gap-8 items-center h-14 overflow-visible">
+            <button class="text-[13px] font-bold text-gray-400 hover:text-black tracking-tight" onclick="filterProducts('category', 'ALL')">BEST 30</button>
+            <div id="main-nav" class="flex gap-8 h-full items-center">
+                </div>
+        </nav>
     </header>
 
-    <section id="shop-view" class="max-w-7xl mx-auto px-4 py-12">
-        <div id="product-container" class="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-12">
-            <p class="col-span-full text-center text-gray-400 py-20 italic tracking-widest">LOADING PRODUCTS...</p>
+    <section id="shop-view">
+        <div class="hero-gradient py-28 px-6 mb-12">
+            <div class="max-w-7xl mx-auto text-center">
+                <span class="text-[10px] font-bold tracking-[0.4em] uppercase text-gray-400 mb-6 block">Premium Selection</span>
+                <h2 class="text-4xl md:text-6xl font-black tracking-tighter mb-8 leading-tight italic">EVERYTHING YOU NEED,<br>JUST FOR YOU.</h2>
+                <p class="text-gray-500 text-sm md:text-base max-w-lg mx-auto font-medium leading-relaxed">
+                    VICT SHOP이 엄선한 프리미엄 가전을 특별한 혜택으로 만나보세요.
+                </p>
+            </div>
         </div>
-    </section>
 
-    <section id="login-view" class="hidden min-h-[70vh] flex items-center justify-center p-4">
-        <div class="w-full max-w-sm space-y-8 text-center">
-            <h2 class="text-2xl font-bold tracking-tighter italic">SIGN IN</h2>
-            <div class="space-y-4">
-                <input type="text" id="login-id" placeholder="ID" class="w-full border-b py-3 outline-none focus:border-black text-sm">
-                <input type="password" id="login-pw" placeholder="PASSWORD" class="w-full border-b py-3 outline-none focus:border-black text-sm">
-                <button onclick="handleLogin()" class="w-full bg-black text-white py-4 text-xs font-bold tracking-widest mt-4">LOGIN</button>
-                <button onclick="showView('signup')" class="text-[10px] text-gray-400 underline tracking-widest uppercase">Create Account</button>
+        <div class="max-w-7xl mx-auto px-6 pb-32">
+            <div id="product-container" class="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-20">
+                <p class="col-span-full text-center text-gray-300 py-20 italic uppercase tracking-widest">Loading Collection...</p>
             </div>
         </div>
     </section>
 
-    <section id="signup-view" class="hidden min-h-[70vh] flex items-center justify-center p-4">
-        <div class="w-full max-w-sm space-y-6">
-            <h2 class="text-2xl font-bold tracking-tighter text-center italic">REGISTER</h2>
+    <section id="login-view" class="hidden min-h-[70vh] flex items-center justify-center p-6">
+        <div class="w-full max-w-sm space-y-10 text-center">
+            <h2 class="text-3xl font-black tracking-tighter italic">SIGN IN</h2>
             <div class="space-y-4">
-                <input type="text" id="reg-id" placeholder="ID" class="w-full border-b py-2 text-sm outline-none focus:border-black">
-                <input type="password" id="reg-pw" placeholder="PASSWORD" class="w-full border-b py-2 text-sm outline-none focus:border-black">
-                <input type="text" id="reg-name" placeholder="NAME" class="w-full border-b py-2 text-sm outline-none focus:border-black">
-                <input type="text" id="reg-phone" placeholder="PHONE (010-0000-0000)" class="w-full border-b py-2 text-sm outline-none focus:border-black">
-                <div class="flex items-center gap-2 py-4">
-                    <input type="checkbox" id="agree-check">
-                    <label class="text-[10px] text-gray-500 underline cursor-pointer" onclick="showModal('terms')">약관 동의</label>
-                </div>
-                <button onclick="handleSignup()" class="w-full bg-black text-white py-4 text-xs font-bold tracking-widest">CREATE ACCOUNT</button>
+                <input type="text" id="login-id" placeholder="ID" class="w-full border-b border-gray-200 py-4 outline-none focus:border-black text-sm">
+                <input type="password" id="login-pw" placeholder="PASSWORD" class="w-full border-b border-gray-200 py-4 outline-none focus:border-black text-sm">
+                <button onclick="handleLogin()" class="w-full bg-black text-white py-5 text-xs font-bold tracking-widest mt-6">SIGN IN</button>
             </div>
         </div>
     </section>
 
-    <div id="order-modal" class="fixed inset-0 bg-black/60 hidden z-[100] flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-md p-8 rounded-lg shadow-2xl">
-            <h2 id="modal-product-name" class="text-xl font-bold mb-6 italic tracking-widest text-center">ORDER</h2>
-            <div class="space-y-4 text-left">
+    <div id="order-modal" class="fixed inset-0 bg-black/80 hidden z-[200] flex items-center justify-center p-6">
+        <div class="bg-white w-full max-w-md p-10 rounded-2xl">
+            <h2 id="modal-product-name" class="text-2xl font-black tracking-tighter mb-8 italic">ORDER</h2>
+            <div class="space-y-6">
                 <div>
-                    <label class="text-[10px] text-gray-400 uppercase tracking-widest">Address</label>
-                    <input type="text" id="order-address" placeholder="배송지 주소를 입력해주세요" class="w-full border-b py-2 outline-none focus:border-black text-sm">
+                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Shipping Address</label>
+                    <input type="text" id="order-address" placeholder="배송지 주소를 입력해 주세요" class="w-full border-b border-gray-100 py-3 outline-none focus:border-black text-sm transition-all">
                 </div>
                 <div>
-                    <label class="text-[10px] text-gray-400 uppercase tracking-widest">Shipping Request</label>
-                    <input type="text" id="order-request" placeholder="배송 시 요청사항 (선택)" class="w-full border-b py-2 outline-none focus:border-black text-sm">
+                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Message</label>
+                    <input type="text" id="order-request" placeholder="배송 요청사항 (선택)" class="w-full border-b border-gray-100 py-3 outline-none focus:border-black text-sm transition-all">
                 </div>
-                <div class="bg-gray-50 p-4 rounded text-[10px] text-gray-400 italic">
-                    주문자: <span id="info-name"></span> / 연락처: <span id="info-phone"></span>
+                <div class="bg-gray-50 p-5 rounded-xl text-[10px] text-gray-400 italic">
+                    주문자: <span id="info-name" class="text-black font-bold"></span> / 연락처: <span id="info-phone" class="text-black font-bold"></span>
                 </div>
             </div>
-            <div class="flex gap-2 mt-8">
-                <button onclick="closeOrderModal()" class="flex-1 py-4 border text-[11px] font-bold uppercase tracking-widest">Cancel</button>
-                <button onclick="submitOrder()" id="submit-btn" class="flex-1 bg-black text-white py-4 text-[11px] font-bold uppercase tracking-widest">Confirm Order</button>
+            <div class="flex gap-3 mt-12">
+                <button onclick="closeOrderModal()" class="flex-1 py-5 border border-gray-100 text-[11px] font-bold uppercase tracking-widest">Close</button>
+                <button onclick="submitOrder()" id="submit-btn" class="flex-1 bg-black text-white py-5 text-[11px] font-bold uppercase tracking-widest">Confirm Order</button>
             </div>
         </div>
     </div>
 
-    <footer class="border-t py-16 mt-20 text-center text-[11px] text-gray-500 leading-relaxed uppercase tracking-widest">
-        <p class="font-bold mb-3 text-gray-800 italic">VICT SHOP</p>
-        <p>Representative: YOU SUNG JO (유승조)</p>
-        <p>Contact: 010-6666-5950</p>
-        <p>Email: victbiz77@gmail.com</p>
-        <p>© 2026 VICT SHOP. ALL RIGHTS RESERVED.</p>
+    <footer class="border-t border-gray-50 py-32 text-center text-[11px] text-gray-400 tracking-widest uppercase font-medium">
+        <p class="font-black text-black mb-8 italic text-2xl tracking-tighter">VICT SHOP</p>
+        <div class="space-y-2">
+            <p>Representative: YOU SUNG JO (유승조)</p>
+            <p>Contact: 010-6666-5950</p>
+            <p>Email: victbiz77@gmail.com</p>
+        </div>
+        <p class="mt-16 opacity-30 text-[9px]">© 2026 VICT SHOP. ALL RIGHTS RESERVED.</p>
     </footer>
 
     <script>
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyKJIMt3K1yBZrX91R-yOveenkqpLUXQvXm2qg5JzDUgwWaNjvPyndzlMRiR6x-N7iB/exec';
+        let allProducts = [];
         let currentUser = JSON.parse(localStorage.getItem('victshop_user'));
-        let currentProduct = '';
 
-        function updateAuthUI() {
-            const nameTag = document.getElementById('user-name-tag');
-            if(currentUser) {
-                nameTag.innerText = currentUser.name.toUpperCase();
-                document.getElementById('login-nav-btn').classList.add('hidden');
-                document.getElementById('logout-nav-btn').classList.remove('hidden');
-            } else {
-                nameTag.innerText = '';
-                document.getElementById('login-nav-btn').classList.remove('hidden');
-                document.getElementById('logout-nav-btn').classList.add('hidden');
+        async function init() {
+            updateAuthUI();
+            await loadProducts();
+        }
+
+        async function loadProducts() {
+            try {
+                const response = await fetch(`${WEB_APP_URL}?action=getProducts`);
+                allProducts = await response.json();
+                
+                const navData = {};
+                allProducts.forEach(p => {
+                    if(!p.카테고리) return;
+                    if(!navData[p.카테고리]) navData[p.카테고리] = new Set();
+                    if(p.서브카테고리) navData[p.카테고리].add(p.서브카테고리);
+                });
+
+                document.getElementById('main-nav').innerHTML = Object.keys(navData).map(cat => `
+                    <div class="nav-item relative h-full flex items-center group">
+                        <button class="text-[13px] font-bold text-gray-400 hover:text-black tracking-tight h-full" onclick="filterProducts('category', '${cat}')">
+                            ${cat.toUpperCase()}
+                        </button>
+                        <div class="dropdown-menu pt-2">
+                            ${Array.from(navData[cat]).map(sub => `
+                                <button class="dropdown-item block w-full text-left px-5 py-3 text-[12px] text-gray-500 font-medium" onclick="filterProducts('subcategory', '${sub}')">
+                                    ${sub}
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+                `).join('');
+                
+                renderProducts(allProducts);
+            } catch (e) { console.error(e); }
+        }
+
+        function renderProducts(products) {
+            const container = document.getElementById('product-container');
+            container.innerHTML = products.map(p => `
+                <div class="product-card cursor-pointer group" onclick="openOrderModal('${p.상품명}')">
+                    <div class="aspect-[3/4] overflow-hidden bg-[#fbfbfb] mb-8">
+                        <img src="${p.이미지URL}" alt="${p.상품명}" class="w-full h-full object-cover">
+                    </div>
+                    <div class="space-y-1">
+                        <span class="text-[9px] font-black text-gray-300 uppercase tracking-widest">${p.브랜드 || 'PREMIUM'}</span>
+                        <h3 class="text-[14px] font-bold tracking-tight text-gray-800">${p.상품명}</h3>
+                        <p class="text-[16px] font-black pt-2">${Number(p.가격).toLocaleString()} KRW</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterProducts(type, value) {
+            let filtered = allProducts;
+            if(value !== 'ALL') {
+                filtered = allProducts.filter(p => type === 'category' ? p.카테고리 === value : p.서브카테고리 === value);
             }
+            renderProducts(filtered);
+            showView('shop');
         }
 
         function showView(view) {
-            ['shop-view', 'login-view', 'signup-view'].forEach(id => document.getElementById(id).classList.add('hidden'));
+            ['shop-view', 'login-view'].forEach(id => document.getElementById(id).classList.add('hidden'));
             document.getElementById(view + '-view').classList.remove('hidden');
-            if(view === 'shop') loadProducts();
         }
 
         async function handleLogin() {
@@ -122,33 +180,23 @@
             if(data.result === 'success') {
                 currentUser = { id, name: data.name, phone: data.phone };
                 localStorage.setItem('victshop_user', JSON.stringify(currentUser));
-                updateAuthUI();
-                showView('shop');
-            } else { alert('로그인 실패'); }
+                location.reload();
+            } else { alert('Login Failed'); }
         }
 
-        function handleLogout() {
-            localStorage.removeItem('victshop_user');
-            location.reload();
-        }
+        function handleLogout() { localStorage.removeItem('victshop_user'); location.reload(); }
 
-        async function loadProducts() {
-            const response = await fetch(`${WEB_APP_URL}?action=getProducts`);
-            const products = await response.json();
-            const container = document.getElementById('product-container');
-            container.innerHTML = '';
-            products.forEach(p => {
-                container.innerHTML += `
-                    <div class="product-card group cursor-pointer" onclick="openOrderModal('${p.상품명}')">
-                        <div class="overflow-hidden bg-gray-50 mb-5"><img src="${p.이미지URL}" class="product-img w-full"></div>
-                        <h3 class="text-[13px] font-medium mb-1">${p.상품명}</h3>
-                        <p class="text-[14px] font-bold">${Number(p.가격).toLocaleString()} KRW</p>
-                    </div>`;
-            });
+        function updateAuthUI() {
+            if(currentUser) {
+                document.getElementById('user-info').innerText = currentUser.name.toUpperCase();
+                document.getElementById('user-info').classList.remove('hidden');
+                document.getElementById('login-btn').classList.add('hidden');
+                document.getElementById('logout-btn').classList.remove('hidden');
+            }
         }
 
         function openOrderModal(name) {
-            if(!currentUser) { alert('로그인 후 이용 가능합니다.'); showView('login'); return; }
+            if(!currentUser) { showView('login'); return; }
             currentProduct = name;
             document.getElementById('modal-product-name').innerText = name;
             document.getElementById('info-name').innerText = currentUser.name;
@@ -160,28 +208,20 @@
 
         async function submitOrder() {
             const address = document.getElementById('order-address').value;
-            const request = document.getElementById('order-request').value;
-            if(!address) return alert('주소를 입력해주세요.');
-
+            if(!address) return alert('Enter address.');
             const btn = document.getElementById('submit-btn');
-            btn.disabled = true; btn.innerText = 'SENDING...';
-
+            btn.disabled = true; btn.innerText = 'PROCESSING...';
             const orderData = { 
-                product: currentProduct, 
-                name: currentUser.name, 
+                product: currentProduct, name: currentUser.name, 
                 phone: currentUser.phone || currentUser.id, 
-                address: address, 
-                request: request 
+                address: address, request: document.getElementById('order-request').value 
             };
-
             await fetch(`${WEB_APP_URL}?action=addOrder&data=${encodeURIComponent(JSON.stringify(orderData))}`);
-            alert('주문이 접수되었습니다.');
-            closeOrderModal();
-            btn.disabled = false; btn.innerText = 'Confirm Order';
+            alert('주문 완료');
+            location.reload();
         }
 
-        updateAuthUI();
-        loadProducts();
+        init();
     </script>
 </body>
 </html>

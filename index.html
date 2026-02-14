@@ -21,10 +21,15 @@
         .nav-item:hover .dropdown-menu { display: block; }
         .qty-btn { width: 32px; height: 32px; border: 1px solid #e5e7eb; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; }
         .section-title { font-size: 18px; font-weight: 800; border-bottom: 2px solid #000; padding-bottom: 12px; margin-bottom: 24px; text-transform: uppercase; }
-        .form-label { font-size: 11px; font-weight: 700; color: #666; width: 110px; display: inline-block; text-transform: uppercase; }
+        .form-label { font-size: 11px; font-weight: 700; color: #666; width: 110px; display: inline-block; text-transform: uppercase; flex-shrink: 0; }
         .form-input { border-bottom: 1px solid #eee; padding: 10px 0; outline: none; width: 100%; font-size: 14px; background: transparent; }
         .form-input:focus { border-bottom: 1px solid #000; }
+        .form-input[readonly] { color: #888; cursor: default; }
         ::-webkit-scrollbar { display: none; }
+        @media (max-width: 768px) {
+            .form-label { width: 80px; font-size: 10px; }
+            .pl-offset { padding-left: 0 !important; }
+        }
     </style>
 </head>
 <body>
@@ -119,11 +124,13 @@
                         <div class="space-y-4">
                             <div class="flex items-center gap-3">
                                 <span class="form-label">주소 *</span>
-                                <input type="text" id="chk-postcode" placeholder="우편번호" class="form-input !w-32" readonly>
-                                <button onclick="execDaumPostcode()" class="bg-gray-100 px-4 py-2 text-[10px] font-black uppercase tracking-widest hover:bg-black hover:text-white transition border">주소 찾기</button>
+                                <div class="flex flex-1 gap-2 items-center">
+                                    <input type="text" id="chk-postcode" placeholder="우편번호" class="form-input !w-24 text-center bg-gray-50" readonly>
+                                    <button onclick="execDaumPostcode()" class="bg-black text-white px-4 py-2 text-[10px] font-black uppercase tracking-widest hover:bg-gray-800 transition shrink-0">주소 찾기</button>
+                                </div>
                             </div>
-                            <div class="pl-[110px]"><input type="text" id="chk-address" placeholder="기본 주소" class="form-input" readonly></div>
-                            <div class="pl-[110px]"><input type="text" id="chk-address-detail" placeholder="상세 주소를 입력해 주세요" class="form-input"></div>
+                            <div class="pl-[110px] pl-offset"><input type="text" id="chk-address" placeholder="기본 주소" class="form-input bg-gray-50" readonly></div>
+                            <div class="pl-[110px] pl-offset"><input type="text" id="chk-address-detail" placeholder="상세 주소를 입력해 주세요" class="form-input"></div>
                         </div>
                         <div class="flex items-center"><span class="form-label">메시지</span><input type="text" id="chk-request" placeholder="배송 메시지" class="form-input"></div>
                     </div>
@@ -153,7 +160,6 @@
                 <input type="text" id="login-id" placeholder="ID" class="w-full border-b-2 border-gray-100 py-4 outline-none focus:border-black text-sm font-bold">
                 <input type="password" id="login-pw" onkeyup="if(event.key === 'Enter') handleLogin()" placeholder="PASSWORD" class="w-full border-b-2 border-gray-100 py-4 outline-none focus:border-black text-sm font-bold text-center">
                 <button onclick="handleLogin()" class="w-full bg-black text-white py-5 text-[11px] font-black tracking-widest mt-8">LOGIN</button>
-                <button onclick="showView('signup')" class="w-full text-[10px] text-gray-400 font-bold uppercase mt-4 underline">Create Account</button>
             </div>
         </div>
     </section>
@@ -175,7 +181,6 @@
 
         async function init() { updateAuthUI(); await loadProducts(); updateCartBadge(); }
 
-        // 주소 검색 실행
         function execDaumPostcode() {
             new daum.Postcode({
                 oncomplete: function(data) {
@@ -275,7 +280,7 @@
             document.getElementById('chk-total-items').innerText = total.toLocaleString() + ' KRW';
             document.getElementById('chk-final-total').innerText = total.toLocaleString() + ' KRW';
             
-            // 로그인 정보 기반으로 자동 입력 (010 번호 사용)
+            // 데이터 누락(undefined) 방지 및 기본 정보 세팅
             document.getElementById('chk-orderer-name').value = currentUser.name || '';
             document.getElementById('chk-orderer-phone').value = currentUser.phone || '010-6666-5950';
             document.getElementById('chk-name').value = currentUser.name || '';
@@ -293,8 +298,17 @@
             alert('주문 완료! 판매자가 곧 개별 연락드립니다.'); location.reload();
         }
 
-        async function handleLogin() { const res = await fetch(`${WEB_APP_URL}?action=login&data=${encodeURIComponent(JSON.stringify({id: document.getElementById('login-id').value, pw: document.getElementById('login-pw').value}))}`); const data = await res.json(); if(data.result === 'success') { currentUser = { id: document.getElementById('login-id').value, name: data.name, phone: data.phone }; localStorage.setItem('victshop_user', JSON.stringify(currentUser)); location.reload(); } else { alert('로그인 실패'); } }
-        async function handleSignup() { const data = { id: document.getElementById('reg-id').value, pw: document.getElementById('reg-pw').value, name: document.getElementById('reg-name').value, phone: document.getElementById('reg-phone').value }; const res = await fetch(`${WEB_APP_URL}?action=signup&data=${encodeURIComponent(JSON.stringify(data))}`); if(await res.text() === 'success') { alert('가입 완료'); showView('login'); } else { alert('ID 중복'); } }
+        async function handleLogin() { 
+            const id = document.getElementById('login-id').value;
+            const pw = document.getElementById('login-pw').value;
+            const res = await fetch(`${WEB_APP_URL}?action=login&data=${encodeURIComponent(JSON.stringify({id, pw}))}`); 
+            const data = await res.json(); 
+            if(data.result === 'success') { 
+                currentUser = { id, name: data.name, phone: data.phone || '010-6666-5950' }; 
+                localStorage.setItem('victshop_user', JSON.stringify(currentUser)); 
+                location.reload(); 
+            } else { alert('로그인 실패'); } 
+        }
         function handleLogout() { localStorage.removeItem('victshop_user'); location.reload(); }
         function updateAuthUI() { if(currentUser) { document.getElementById('user-info').innerText = currentUser.name.toUpperCase(); document.getElementById('user-info').classList.remove('hidden'); document.getElementById('login-btn').classList.add('hidden'); document.getElementById('logout-btn').classList.remove('hidden'); } }
         init();

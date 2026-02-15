@@ -31,6 +31,7 @@
         .status-ready { background: #eee; color: #666; }
         .status-request { background: #fef3c7; color: #d97706; }
         .status-cancel { background: #fee2e2; color: #ef4444; }
+        .terms-box { font-size: 11px; height: 80px; overflow-y: auto; background: #f9f9f9; padding: 10px; border: 1px solid #eee; margin-top: 5px; color: #888; line-height: 1.5; }
     </style>
 </head>
 <body>
@@ -127,7 +128,7 @@
                                 <span class="form-label">주소 *</span>
                                 <div class="flex flex-1 gap-2 items-center">
                                     <input type="text" id="chk-postcode" placeholder="우편번호" class="form-input !w-24 text-center bg-gray-50" readonly>
-                                    <button onclick="execDaumPostcode()" class="bg-black text-white px-4 py-2 text-[10px] font-black uppercase tracking-widest hover:bg-gray-800 transition shrink-0">주소 찾기</button>
+                                    <button onclick="execDaumPostcode('order')" class="bg-black text-white px-4 py-2 text-[10px] font-black uppercase tracking-widest hover:bg-gray-800 transition shrink-0">주소 찾기</button>
                                 </div>
                             </div>
                             <div class="pl-[110px] pl-offset"><input type="text" id="chk-address" placeholder="기본 주소" class="form-input bg-gray-50" readonly></div>
@@ -186,16 +187,44 @@
         </div>
     </section>
 
-    <section id="signup-view" class="view-section hidden min-h-[70vh] flex items-center justify-center p-6 text-center">
-        <div class="w-full max-w-sm space-y-12">
-            <h2 class="text-4xl font-black tracking-tighter italic text-center">SIGN UP</h2>
-            <div class="space-y-4">
-                <input type="text" id="reg-id" placeholder="ID (Unique ID)" class="w-full border-b-2 border-gray-100 py-4 outline-none focus:border-black text-sm font-bold">
-                <input type="password" id="reg-pw" placeholder="PASSWORD" class="w-full border-b-2 border-gray-100 py-4 outline-none focus:border-black text-sm font-bold">
-                <input type="text" id="reg-name" placeholder="FULL NAME" class="w-full border-b-2 border-gray-100 py-4 outline-none focus:border-black text-sm font-bold">
-                <input type="text" id="reg-phone" placeholder="PHONE" class="w-full border-b-2 border-gray-100 py-4 outline-none focus:border-black text-sm font-bold">
-                <button onclick="handleSignup()" class="w-full bg-black text-white py-5 text-[11px] font-black tracking-widest mt-8 uppercase">Create Account</button>
-                <button onclick="showView('login')" class="w-full text-[10px] text-gray-400 font-bold uppercase mt-4 underline">Back to Login</button>
+    <section id="signup-view" class="view-section hidden py-24 px-6 max-w-xl mx-auto">
+        <h2 class="text-4xl font-black tracking-tighter italic text-center mb-16">SIGN UP</h2>
+        <div class="space-y-8">
+            <div class="space-y-6">
+                <h3 class="section-title">Account Info</h3>
+                <div class="flex items-center"><span class="form-label">아이디 *</span><input type="text" id="reg-id" placeholder="Email or ID" class="form-input"></div>
+                <div class="flex items-center"><span class="form-label">비밀번호 *</span><input type="password" id="reg-pw" placeholder="PASSWORD" class="form-input"></div>
+                <div class="flex items-center"><span class="form-label">이름 *</span><input type="text" id="reg-name" placeholder="FULL NAME" class="form-input"></div>
+                <div class="flex items-center"><span class="form-label">연락처 *</span><input type="text" id="reg-phone" placeholder="010-0000-0000" class="form-input"></div>
+            </div>
+
+            <div class="space-y-6">
+                <h3 class="section-title">Address</h3>
+                <div class="flex items-center gap-3">
+                    <span class="form-label">주소 *</span>
+                    <div class="flex flex-1 gap-2 items-center">
+                        <input type="text" id="reg-postcode" placeholder="우편번호" class="form-input !w-24 text-center bg-gray-50" readonly>
+                        <button onclick="execDaumPostcode('reg')" class="bg-black text-white px-4 py-2 text-[10px] font-black uppercase tracking-widest shrink-0">주소 찾기</button>
+                    </div>
+                </div>
+                <div class="pl-[110px] pl-offset"><input type="text" id="reg-address" placeholder="기본 주소" class="form-input bg-gray-50" readonly></div>
+                <div class="pl-[110px] pl-offset"><input type="text" id="reg-address-detail" placeholder="상세 주소" class="form-input"></div>
+            </div>
+
+            <div class="space-y-4 pt-4">
+                <h3 class="section-title">Terms & Agreement</h3>
+                <div class="space-y-2">
+                    <div class="flex items-center gap-2"><input type="checkbox" id="agree-all" onchange="toggleAllAgreements(this.checked)"><label class="text-[11px] font-black">이용약관 및 개인정보 수집에 모두 동의합니다.</label></div>
+                    <div class="terms-box">[이용약관]<br>본 서비스는 유승조가 운영하는 V shop이며, 회원가입 시 서비스 이용을 위한 최소한의 개인정보를 수집합니다.</div>
+                    <div class="flex items-center gap-2"><input type="checkbox" class="term-chk" id="agree-terms"><label class="text-[10px] text-gray-500">서비스 이용약관 동의 (필수)</label></div>
+                    <div class="terms-box">[개인정보 수집 및 이용 안내]<br>1. 수집항목: 아이디, 비밀번호, 이름, 연락처, 주소<br>2. 수집목적: 회원 식별, 주문 처리, 고객 상담<br>3. 보유기간: 회원 탈퇴 시까지</div>
+                    <div class="flex items-center gap-2"><input type="checkbox" class="term-chk" id="agree-privacy"><label class="text-[10px] text-gray-500">개인정보 수집 및 이용 동의 (필수)</label></div>
+                </div>
+            </div>
+
+            <div class="pt-10">
+                <button onclick="handleSignup()" class="w-full bg-black text-white py-5 text-[11px] font-black tracking-widest uppercase">Create Account</button>
+                <button onclick="showView('login')" class="w-full text-[10px] text-gray-400 font-bold uppercase mt-4 underline text-center">Back to Login</button>
             </div>
         </div>
     </section>
@@ -210,7 +239,6 @@
     </footer>
 
     <script>
-        // 새로운 배포 URL 적용 완료
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyRKVpLnEUkZTrYo2t-YzznzuSxckMLX59m7UWA_LvdGZIIOxQxxkDGXj-0OJs9hMYf/exec';
         let allProducts = [], cart = JSON.parse(localStorage.getItem('victshop_cart')) || [];
         let currentUser = JSON.parse(localStorage.getItem('victshop_user'));
@@ -218,15 +246,25 @@
 
         async function init() { updateAuthUI(); await loadProducts(); updateCartBadge(); }
 
-        function execDaumPostcode() {
+        function execDaumPostcode(type) {
             new daum.Postcode({
                 oncomplete: function(data) {
                     let addr = data.userSelectedType === 'R' ? data.roadAddress : data.jibunAddress;
-                    document.getElementById('chk-postcode').value = data.zonecode;
-                    document.getElementById("chk-address").value = addr;
-                    document.getElementById("chk-address-detail").focus();
+                    if(type === 'order') {
+                        document.getElementById('chk-postcode').value = data.zonecode;
+                        document.getElementById("chk-address").value = addr;
+                        document.getElementById("chk-address-detail").focus();
+                    } else {
+                        document.getElementById('reg-postcode').value = data.zonecode;
+                        document.getElementById("reg-address").value = addr;
+                        document.getElementById("reg-address-detail").focus();
+                    }
                 }
             }).open();
+        }
+
+        function toggleAllAgreements(checked) {
+            document.querySelectorAll('.term-chk').forEach(el => el.checked = checked);
         }
 
         async function loadProducts() {
@@ -285,6 +323,7 @@
         function changeQty(val) { currentQty = Math.max(1, currentQty + val); document.getElementById('order-qty').value = currentQty; updateTotalPrice(); }
         function updateTotalPrice() { if(currentProductObj) document.getElementById('total-price-display').innerText = (currentProductObj.가격 * currentQty).toLocaleString() + ' KRW'; }
         function updateCartBadge() { document.getElementById('cart-count').innerText = cart.length; }
+        
         function addToCart() { 
             const item = { ...currentProductObj, qty: currentQty };
             const idx = cart.findIndex(c => c.상품명 === item.상품명);
@@ -307,7 +346,6 @@
         function updateCartQty(idx, delta) { cart[idx].qty = Math.max(1, cart[idx].qty+delta); localStorage.setItem('victshop_cart', JSON.stringify(cart)); renderCart(); updateCartBadge(); }
         function removeFromCart(idx) { cart.splice(idx,1); localStorage.setItem('victshop_cart', JSON.stringify(cart)); renderCart(); updateCartBadge(); }
 
-        // 마이페이지 주문 조회 로직
         async function loadMyPage() {
             if(!currentUser) return showView('login');
             document.getElementById('my-id').value = currentUser.id;
@@ -322,14 +360,10 @@
                     container.innerHTML = orders.map(o => {
                         const date = new Date(o.주문시간).toLocaleDateString();
                         const status = o.상세상태; 
-                        
                         let statusClass = 'status-ready';
                         if(status === '취소요청') statusClass = 'status-request';
                         if(status === '취소완료') statusClass = 'status-cancel';
-                        
-                        // '주문접수' 상태일 때만 취소 요청 버튼 노출
                         const cancelBtn = (status === '주문접수') ? `<button onclick="handleCancelOrder('${o.주문시간}')" class="text-[9px] underline uppercase text-gray-400 hover:text-red-500 font-bold transition">Cancel Request</button>` : '';
-                        
                         return `
                         <div class="border border-gray-100 p-6 space-y-4">
                             <div class="flex justify-between items-start">
@@ -357,8 +391,19 @@
         }
 
         async function handleSignup() {
-            const data = { id: document.getElementById('reg-id').value, pw: document.getElementById('reg-pw').value, name: document.getElementById('reg-name').value, phone: document.getElementById('reg-phone').value };
-            if(!data.id || !data.pw || !data.name || !data.phone) return alert('모든 항목을 입력해 주세요.');
+            const data = { 
+                id: document.getElementById('reg-id').value, 
+                pw: document.getElementById('reg-pw').value, 
+                name: document.getElementById('reg-name').value, 
+                phone: document.getElementById('reg-phone').value,
+                postcode: document.getElementById('reg-postcode').value,
+                address: document.getElementById('reg-address').value,
+                addressDetail: document.getElementById('reg-address-detail').value
+            };
+            
+            if(!data.id || !data.pw || !data.name || !data.phone || !data.address) return alert('모든 필수 항목(*)을 입력해 주세요.');
+            if(!document.getElementById('agree-terms').checked || !document.getElementById('agree-privacy').checked) return alert('필수 약관에 동의해 주세요.');
+
             const res = await fetch(`${WEB_APP_URL}?action=signup&data=${encodeURIComponent(JSON.stringify(data))}`);
             const result = await res.text();
             if(result === 'success') { alert('가입 완료!'); showView('login'); } 

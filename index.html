@@ -31,7 +31,7 @@
         .status-ready { background: #eee; color: #666; }
         .status-request { background: #fef3c7; color: #d97706; }
         .status-cancel { background: #fee2e2; color: #ef4444; }
-        .terms-box { font-size: 11px; height: 80px; overflow-y: auto; background: #f9f9f9; padding: 10px; border: 1px solid #eee; margin-top: 5px; color: #888; line-height: 1.5; }
+        .terms-box { font-size: 11px; height: 150px; overflow-y: auto; background: #f9f9f9; padding: 15px; border: 1px solid #eee; margin-top: 5px; color: #666; line-height: 1.6; text-align: left; }
     </style>
 </head>
 <body>
@@ -170,7 +170,7 @@
             </div>
             <div class="md:col-span-2 space-y-8">
                 <div class="flex justify-between items-baseline border-b-2 border-black pb-3"><h3 class="text-lg font-black uppercase tracking-tighter italic">Order History</h3></div>
-                <div id="my-orders-list" class="space-y-6"><p class="text-center py-20 text-gray-400 text-sm">Loading orders...</p></div>
+                <div id="my-orders-list" class="space-y-6"><p class="text-center py-20 text-gray-400 text-sm italic">Loading orders...</p></div>
             </div>
         </div>
     </section>
@@ -187,7 +187,7 @@
         </div>
     </section>
 
-    <section id="signup-view" class="view-section hidden py-24 px-6 max-w-xl mx-auto">
+    <section id="signup-view" class="view-section hidden py-24 px-6 max-w-2xl mx-auto">
         <h2 class="text-4xl font-black tracking-tighter italic text-center mb-16">SIGN UP</h2>
         <div class="space-y-8">
             <div class="space-y-6">
@@ -197,7 +197,6 @@
                 <div class="flex items-center"><span class="form-label">이름 *</span><input type="text" id="reg-name" placeholder="FULL NAME" class="form-input"></div>
                 <div class="flex items-center"><span class="form-label">연락처 *</span><input type="text" id="reg-phone" placeholder="010-0000-0000" class="form-input"></div>
             </div>
-
             <div class="space-y-6">
                 <h3 class="section-title">Address</h3>
                 <div class="flex items-center gap-3">
@@ -210,20 +209,36 @@
                 <div class="pl-[110px] pl-offset"><input type="text" id="reg-address" placeholder="기본 주소" class="form-input bg-gray-50" readonly></div>
                 <div class="pl-[110px] pl-offset"><input type="text" id="reg-address-detail" placeholder="상세 주소" class="form-input"></div>
             </div>
-
-            <div class="space-y-4 pt-4">
+            <div class="space-y-6 pt-4 text-left">
                 <h3 class="section-title">Terms & Agreement</h3>
-                <div class="space-y-2">
-                    <div class="flex items-center gap-2"><input type="checkbox" id="agree-all" onchange="toggleAllAgreements(this.checked)"><label class="text-[11px] font-black">이용약관 및 개인정보 수집에 모두 동의합니다.</label></div>
-                    <div class="terms-box">[이용약관]<br>본 서비스는 유승조가 운영하는 V shop이며, 회원가입 시 서비스 이용을 위한 최소한의 개인정보를 수집합니다.</div>
-                    <div class="flex items-center gap-2"><input type="checkbox" class="term-chk" id="agree-terms"><label class="text-[10px] text-gray-500">서비스 이용약관 동의 (필수)</label></div>
-                    <div class="terms-box">[개인정보 수집 및 이용 안내]<br>1. 수집항목: 아이디, 비밀번호, 이름, 연락처, 주소<br>2. 수집목적: 회원 식별, 주문 처리, 고객 상담<br>3. 보유기간: 회원 탈퇴 시까지</div>
-                    <div class="flex items-center gap-2"><input type="checkbox" class="term-chk" id="agree-privacy"><label class="text-[10px] text-gray-500">개인정보 수집 및 이용 동의 (필수)</label></div>
+                <div class="space-y-4">
+                    <div class="flex items-center gap-2"><input type="checkbox" id="agree-all" onchange="toggleAllAgreements(this.checked)"><label class="text-[12px] font-black uppercase tracking-tighter">전체 약관에 동의합니다.</label></div>
+                    
+                    <div>
+                        <div class="flex items-center justify-between mb-2"><label class="text-[11px] font-bold text-gray-500 uppercase">이용약관 동의 (필수)</label><input type="checkbox" class="term-chk" id="agree-terms"></div>
+                        <div class="terms-box">
+                            제1조(목적) 본 약관은 V shop(이하 "몰")이 운영하는 인터넷 사이트에서 제공하는 서비스 이용과 관련하여 몰과 이용자의 권리, 의무 및 책임사항을 규정함을 목적으로 합니다.<br><br>
+                            제2조(정의) ①"몰"이란 몰이 재화 또는 용역을 이용자에게 제공하기 위하여 컴퓨터 등 정보통신설비를 이용하여 재화 등을 거래할 수 있도록 설정한 가상의 영업장을 말하며, 아울러 인터넷쇼핑몰을 운영하는 사업자의 의미로도 사용합니다. ②"이용자"란 "몰"에 접속하여 이 약관에 따라 "몰"이 제공하는 서비스를 받는 회원 및 비회원을 말합니다.<br><br>
+                            제3조(회원가입) ①이용자는 "몰"이 정한 가입 양식에 따라 회원정보를 기입한 후 이 약관에 동의한다는 의사표시를 함으로서 회원가입을 신청합니다. ②"몰"은 제1항과 같이 회원으로 가입할 것을 신청한 이용자 중 다음 각호에 해당하지 않는 한 회원으로 등록합니다. 1. 등록 내용에 허위, 기재누락, 오기가 있는 경우. 2. 기타 회원으로 등록하는 것이 "몰"의 기술상 현저히 지장이 있다고 판단되는 경우.
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex items-center justify-between mb-2"><label class="text-[11px] font-bold text-gray-500 uppercase">개인정보 수집 및 이용 동의 (필수)</label><input type="checkbox" class="term-chk" id="agree-privacy"></div>
+                        <div class="terms-box">
+                            V shop은 고객님의 개인정보를 중요시하며, "정보통신망 이용촉진 및 정보보호"에 관한 법률을 준수하고 있습니다.<br><br>
+                            1. 수집하는 개인정보 항목: 이름, 아이디, 비밀번호, 이메일, 전화번호, 휴대전화번호, 주소.<br>
+                            2. 개인정보의 수집 및 이용목적: 회원제 서비스 이용에 따른 본인확인, 개인 식별, 불량회원의 부정 이용 방지와 비인가 사용 방지, 가입 의사 확인, 고지사항 전달, 주문 처리 및 배송.<br>
+                            3. 개인정보의 보유 및 이용기간: 원칙적으로 개인정보 수집 및 이용목적이 달성된 후에는 해당 정보를 지체 없이 파기합니다. 단, 관계법령의 규정에 의하여 보존할 필요가 있는 경우 회사는 아래와 같이 관계법령에서 정한 일정한 기간 동안 회원정보를 보관합니다.<br>
+                            - 보존 항목 : 결제 기록, 배송 정보<br>
+                            - 보존 근거 : 계약 또는 청약철회 등에 관한 기록<br>
+                            - 보존 기간 : 5년
+                        </div>
+                    </div>
                 </div>
             </div>
-
             <div class="pt-10">
-                <button onclick="handleSignup()" class="w-full bg-black text-white py-5 text-[11px] font-black tracking-widest uppercase">Create Account</button>
+                <button onclick="handleSignup()" class="w-full bg-black text-white py-5 text-[11px] font-black tracking-widest uppercase transition hover:bg-zinc-800">Create Account</button>
                 <button onclick="showView('login')" class="w-full text-[10px] text-gray-400 font-bold uppercase mt-4 underline text-center">Back to Login</button>
             </div>
         </div>
@@ -263,9 +278,7 @@
             }).open();
         }
 
-        function toggleAllAgreements(checked) {
-            document.querySelectorAll('.term-chk').forEach(el => el.checked = checked);
-        }
+        function toggleAllAgreements(checked) { document.querySelectorAll('.term-chk').forEach(el => el.checked = checked); }
 
         async function loadProducts() {
             try {
@@ -323,7 +336,6 @@
         function changeQty(val) { currentQty = Math.max(1, currentQty + val); document.getElementById('order-qty').value = currentQty; updateTotalPrice(); }
         function updateTotalPrice() { if(currentProductObj) document.getElementById('total-price-display').innerText = (currentProductObj.가격 * currentQty).toLocaleString() + ' KRW'; }
         function updateCartBadge() { document.getElementById('cart-count').innerText = cart.length; }
-        
         function addToCart() { 
             const item = { ...currentProductObj, qty: currentQty };
             const idx = cart.findIndex(c => c.상품명 === item.상품명);
@@ -346,6 +358,7 @@
         function updateCartQty(idx, delta) { cart[idx].qty = Math.max(1, cart[idx].qty+delta); localStorage.setItem('victshop_cart', JSON.stringify(cart)); renderCart(); updateCartBadge(); }
         function removeFromCart(idx) { cart.splice(idx,1); localStorage.setItem('victshop_cart', JSON.stringify(cart)); renderCart(); updateCartBadge(); }
 
+        // 마이페이지 주문 조회 로직 (키 이름 정확히 매칭)
         async function loadMyPage() {
             if(!currentUser) return showView('login');
             document.getElementById('my-id').value = currentUser.id;
@@ -355,15 +368,19 @@
             try {
                 const res = await fetch(`${WEB_APP_URL}?action=getMyOrders&userId=${currentUser.id}`);
                 const orders = await res.json();
-                if(orders.length === 0) { container.innerHTML = '<p class="text-center py-20 text-gray-400 text-sm italic">No order history found.</p>'; }
+                if(orders.length === 0) { container.innerHTML = '<p class="text-center py-20 text-gray-400 text-sm italic tracking-widest">NO ORDER HISTORY FOUND.</p>'; }
                 else {
                     container.innerHTML = orders.map(o => {
                         const date = new Date(o.주문시간).toLocaleDateString();
-                        const status = o.상세상태; 
+                        // 시트에서 가져온 상세상태(L열) 데이터 매칭
+                        const status = o['상세상태'] || o.상세상태 || '주문접수'; 
+                        
                         let statusClass = 'status-ready';
                         if(status === '취소요청') statusClass = 'status-request';
                         if(status === '취소완료') statusClass = 'status-cancel';
+                        
                         const cancelBtn = (status === '주문접수') ? `<button onclick="handleCancelOrder('${o.주문시간}')" class="text-[9px] underline uppercase text-gray-400 hover:text-red-500 font-bold transition">Cancel Request</button>` : '';
+                        
                         return `
                         <div class="border border-gray-100 p-6 space-y-4">
                             <div class="flex justify-between items-start">
@@ -392,22 +409,17 @@
 
         async function handleSignup() {
             const data = { 
-                id: document.getElementById('reg-id').value, 
-                pw: document.getElementById('reg-pw').value, 
-                name: document.getElementById('reg-name').value, 
-                phone: document.getElementById('reg-phone').value,
-                postcode: document.getElementById('reg-postcode').value,
-                address: document.getElementById('reg-address').value,
+                id: document.getElementById('reg-id').value, pw: document.getElementById('reg-pw').value, 
+                name: document.getElementById('reg-name').value, phone: document.getElementById('reg-phone').value,
+                postcode: document.getElementById('reg-postcode').value, address: document.getElementById('reg-address').value,
                 addressDetail: document.getElementById('reg-address-detail').value
             };
-            
             if(!data.id || !data.pw || !data.name || !data.phone || !data.address) return alert('모든 필수 항목(*)을 입력해 주세요.');
             if(!document.getElementById('agree-terms').checked || !document.getElementById('agree-privacy').checked) return alert('필수 약관에 동의해 주세요.');
-
             const res = await fetch(`${WEB_APP_URL}?action=signup&data=${encodeURIComponent(JSON.stringify(data))}`);
-            const result = await res.text();
-            if(result === 'success') { alert('가입 완료!'); showView('login'); } 
-            else if(result === 'exists') { alert('이미 존재하는 ID입니다.'); }
+            const resText = await res.text();
+            if(resText === 'success') { alert('가입 완료! 로그인해 주세요.'); showView('login'); } 
+            else if(resText === 'exists') { alert('이미 존재하는 ID입니다.'); }
             else { alert('가입 실패.'); }
         }
 

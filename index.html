@@ -32,7 +32,7 @@
         .status-request { background: #fef3c7; color: #d97706; }
         .status-cancel { background: #fee2e2; color: #ef4444; }
         .terms-box { font-size: 11px; height: 150px; overflow-y: auto; background: #f9f9f9; padding: 15px; border: 1px solid #eee; margin-top: 5px; color: #666; line-height: 1.6; text-align: left; }
-        .delivery-info { font-size: 11px; background: #f8fafc; padding: 10px; border-radius: 4px; border: 1px dashed #cbd5e1; margin-top: 10px; }
+        .delivery-info { font-size: 11px; background: #f8fafc; padding: 10px; border-radius: 4px; border: 1px dashed #cbd5e1; margin-top: 10px; text-align: left; }
         .tracking-link { color: #2563eb; text-decoration: underline; cursor: pointer; font-weight: 700; }
         .tracking-link:hover { color: #1d4ed8; }
     </style>
@@ -325,6 +325,7 @@
         function changeQty(val) { currentQty = Math.max(1, currentQty + val); document.getElementById('order-qty').value = currentQty; updateTotalPrice(); }
         function updateTotalPrice() { if(currentProductObj) document.getElementById('total-price-display').innerText = (currentProductObj.가격 * currentQty).toLocaleString() + ' KRW'; }
         function updateCartBadge() { document.getElementById('cart-count').innerText = cart.length; }
+        
         function addToCart() { 
             const item = { ...currentProductObj, qty: currentQty };
             const idx = cart.findIndex(c => c.상품명 === item.상품명);
@@ -347,12 +348,22 @@
         function updateCartQty(idx, delta) { cart[idx].qty = Math.max(1, cart[idx].qty+delta); localStorage.setItem('victshop_cart', JSON.stringify(cart)); renderCart(); updateCartBadge(); }
         function removeFromCart(idx) { cart.splice(idx,1); localStorage.setItem('victshop_cart', JSON.stringify(cart)); renderCart(); updateCartBadge(); }
 
-        // 배송조회 링크 생성기
-        function getTrackingUrl(company, number) {
+        // 공식 홈페이지 배송조회 URL 생성기
+        function getOfficialTrackingUrl(company, number) {
             if(!company || !number) return null;
             const cleanNumber = number.toString().replace(/[^0-9]/g, ''); // 숫자만 추출
-            // 범용 배송조회 서비스 사용
-            return `https://tracker.delivery/track/${encodeURIComponent(company)}/${cleanNumber}`;
+            
+            // 주요 택배사 공식 조회 주소 매핑
+            if(company.includes('로젠')) return `https://www.ilogen.com/web/personal/tkSearch?slipNo=${cleanNumber}`;
+            if(company.includes('CJ') || company.includes('대한통운')) return `https://www.cjlogistics.com/ko/tool/parcel/tracking?invNo=${cleanNumber}`;
+            if(company.includes('한진')) return `https://www.hanjin.com/kor/CMS/DeliveryMgr/WaybillResult.do?mCode=MN038&wblnum=${cleanNumber}`;
+            if(company.includes('롯데')) return `https://www.lotteglogis.com/home/reservation/tracking/linkView?InvNo=${cleanNumber}`;
+            if(company.includes('우체국')) return `https://service.epost.go.kr/trace.RetrieveDomRParcel.comm?displayHeader=N&sid1=${cleanNumber}`;
+            if(company.includes('경동')) return `https://kdexp.com/service/delivery/search_result.do?barcode=${cleanNumber}`;
+            if(company.includes('CU') || company.includes('편의점')) return `https://www.cupost.co.kr/postbox/delivery/localResult.cupost?invoice_no=${cleanNumber}`;
+            
+            // 그 외 택배사는 네이버 검색 연동 (범용)
+            return `https://search.naver.com/search.naver?query=${encodeURIComponent(company)}+${cleanNumber}`;
         }
 
         async function loadMyPage() {
@@ -375,21 +386,21 @@
                         
                         const cancelBtn = (status === '주문접수') ? `<button onclick="handleCancelOrder('${o.주문시간}')" class="text-[9px] underline uppercase text-gray-400 hover:text-red-500 font-bold transition">Cancel Request</button>` : '';
                         
-                        // 배송 정보 처리 (송장번호 클릭 시 새창으로 배송조회)
+                        // 배송 정보 처리 (공식 홈페이지 연결)
                         let deliveryDisplay = '';
                         if(o.택배사 && o.송장번호) {
-                            const trackingUrl = getTrackingUrl(o.택배사, o.송장번호);
+                            const trackingUrl = getOfficialTrackingUrl(o.택배사, o.송장번호);
                             deliveryDisplay = `
-                                <div class="delivery-info text-left">
+                                <div class="delivery-info">
                                     <span class="font-bold text-black uppercase tracking-tighter">Delivery:</span> ${o.택배사} / 
                                     <span class="tracking-link" onclick="window.open('${trackingUrl}', '_blank')">${o.송장번호}</span>
-                                    <p class="text-[9px] text-blue-400 mt-1">* 송장번호를 클릭하면 배송조회 페이지로 연결됩니다.</p>
+                                    <p class="text-[9px] text-blue-500 mt-1">* 송장번호를 클릭하면 택배사 공식 홈페이지로 연결됩니다.</p>
                                 </div>
                             `;
                         }
 
                         return `
-                        <div class="border border-gray-100 p-6 space-y-4 text-left">
+                        <div class="border border-gray-100 p-6 space-y-4">
                             <div class="flex justify-between items-start">
                                 <div><p class="text-[10px] text-gray-400 font-bold mb-1 tracking-widest">${date}</p><h4 class="text-[13px] font-black tracking-tighter">${o.상품명}</h4></div>
                                 <span class="order-status ${statusClass}">${status}</span>

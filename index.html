@@ -32,6 +32,7 @@
         .status-request { background: #fef3c7; color: #d97706; }
         .status-cancel { background: #fee2e2; color: #ef4444; }
         .terms-box { font-size: 11px; height: 150px; overflow-y: auto; background: #f9f9f9; padding: 15px; border: 1px solid #eee; margin-top: 5px; color: #666; line-height: 1.6; text-align: left; }
+        .delivery-info { font-size: 11px; background: #f8fafc; padding: 10px; border-radius: 4px; border: 1px dashed #cbd5e1; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -240,7 +241,7 @@
     </footer>
 
     <script>
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbziuXMkdWuOnFYQ-jQZCgo4o8o3b2foCTvhVVTRDx4A2fqUggZfb8h0UAVu7ZGDu0Ab/exec';
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxohad2qr3BM-VHfQyWoNbjEhBvs0R2txayRcOzczBzscL0TtoO3XsZGs-07c7P4LnH/exec';
         let allProducts = [], cart = JSON.parse(localStorage.getItem('victshop_cart')) || [];
         let currentUser = JSON.parse(localStorage.getItem('victshop_user'));
         let currentProductObj = null, currentQty = 1, orderType = 'single', previousView = 'home';
@@ -344,7 +345,6 @@
         function updateCartQty(idx, delta) { cart[idx].qty = Math.max(1, cart[idx].qty+delta); localStorage.setItem('victshop_cart', JSON.stringify(cart)); renderCart(); updateCartBadge(); }
         function removeFromCart(idx) { cart.splice(idx,1); localStorage.setItem('victshop_cart', JSON.stringify(cart)); renderCart(); updateCartBadge(); }
 
-        // 마이페이지 주문 조회 (GAS에서 가져온 상태값을 정확히 인식)
         async function loadMyPage() {
             if(!currentUser) return showView('login');
             document.getElementById('my-id').value = currentUser.id;
@@ -359,20 +359,27 @@
                     container.innerHTML = orders.map(o => {
                         const date = new Date(o.주문시간).toLocaleDateString();
                         const status = o.상태 || '주문접수'; 
-                        
                         let statusClass = 'status-ready';
                         if(status === '취소요청') statusClass = 'status-request';
                         if(status === '취소완료') statusClass = 'status-cancel';
                         
                         const cancelBtn = (status === '주문접수') ? `<button onclick="handleCancelOrder('${o.주문시간}')" class="text-[9px] underline uppercase text-gray-400 hover:text-red-500 font-bold transition">Cancel Request</button>` : '';
                         
+                        // 배송 정보 (택배사/송장번호) 표시 영역
+                        const deliveryDisplay = (o.택배사 && o.송장번호) ? `
+                            <div class="delivery-info">
+                                <span class="font-bold text-black uppercase tracking-tighter">Delivery:</span> ${o.택배사} / ${o.송장번호}
+                            </div>
+                        ` : '';
+
                         return `
-                        <div class="border border-gray-100 p-6 space-y-4">
+                        <div class="border border-gray-100 p-6 space-y-4 text-left">
                             <div class="flex justify-between items-start">
                                 <div><p class="text-[10px] text-gray-400 font-bold mb-1 tracking-widest">${date}</p><h4 class="text-[13px] font-black tracking-tighter">${o.상품명}</h4></div>
                                 <span class="order-status ${statusClass}">${status}</span>
                             </div>
                             <div class="flex justify-between items-end"><p class="text-[12px] font-black">${o.총금액}</p>${cancelBtn}</div>
+                            ${deliveryDisplay}
                         </div>`;
                     }).join('');
                 }

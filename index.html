@@ -176,12 +176,27 @@
     </footer>
 
     <script>
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxohad2qr3BM-VHfQyWoNbjEhBvs0R2txayRcOzczBzscL0TtoO3XsZGs-07c7P4LnH/exec';
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbw31q9JW3r8r-JPtzsZdHjKoq8CrMC_nSJGsTJ2qpBPjHxaAB2VdmJiedUWAjcF7HN5/exec';
         let allProducts = [], cart = JSON.parse(localStorage.getItem('victshop_cart')) || [];
         let currentUser = JSON.parse(localStorage.getItem('victshop_user'));
         let currentProductObj = null, currentQty = 1, orderType = 'single', previousView = 'home';
 
-        async function init() { updateAuthUI(); await loadProducts(); updateCartBadge(); }
+        // 1. 초기 로드 시 히스토리 감지 설정 추가
+        async function init() { 
+            updateAuthUI(); 
+            await loadProducts(); 
+            updateCartBadge(); 
+
+            // 브라우저 뒤로가기/앞으로가기 감지
+            window.onpopstate = function(event) {
+                const view = event.state ? event.state.view : 'home';
+                showView(view, false); // 히스토리 추가 없이 화면만 전환
+            };
+
+            // URL의 해시값(#)이 있으면 해당 뷰 표시, 없으면 홈 표시
+            const initialView = window.location.hash.replace('#', '') || 'home';
+            showView(initialView, false);
+        }
 
         function execDaumPostcode(type) {
             new daum.Postcode({
@@ -240,18 +255,28 @@
             updateTotalPrice(); showView('detail');
         }
 
-        function goBackFromDetail() { showView(previousView); }
+        function goBackFromDetail() { 
+            // 상세 페이지에서 뒤로 갈 때는 단순히 브라우저 뒤로가기 실행
+            window.history.back();
+        }
         function filterByCat(cat) { const filtered = allProducts.filter(p => p.카테고리 === cat); renderCategoryView(cat, filtered); }
         function filterBySub(sub) { const filtered = allProducts.filter(p => p.서브카테고리 === sub); renderCategoryView(sub, filtered); }
         function renderCategoryView(title, products) { document.getElementById('category-title').innerText = title; document.getElementById('product-container').innerHTML = products.map(p => createProductCard(p)).join(''); showView('category'); }
 
-        function showView(view) {
+        // 2. 히스토리 기록 기능을 포함한 화면 전환 함수
+        function showView(view, pushState = true) {
             document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
             const target = document.getElementById(view + '-view');
             if(target) target.classList.remove('hidden');
+            
             if(view === 'cart') renderCart();
             if(view === 'mypage') loadMyPage();
             window.scrollTo(0,0);
+
+            // pushState가 true일 때만 브라우저 히스토리에 추가
+            if (pushState) {
+                window.history.pushState({ view: view }, '', '#' + view);
+            }
         }
 
         function showMain() { showView('home'); }
@@ -281,14 +306,9 @@
         function updateCartQty(idx, delta) { cart[idx].qty = Math.max(1, cart[idx].qty+delta); localStorage.setItem('victshop_cart', JSON.stringify(cart)); renderCart(); updateCartBadge(); }
         function removeFromCart(idx) { cart.splice(idx,1); localStorage.setItem('victshop_cart', JSON.stringify(cart)); renderCart(); updateCartBadge(); }
 
-        /**
-         * 오류 해결 핵심 로직: 네이버 배송조회 API 활용
-         * 택배사 서버 직접 전송(POST) 차단 문제를 우회하여 네이버 검색창을 통해 즉시 조회
-         */
         function openTracking(company, number) {
             if(!company || !number) return;
-            const cleanNumber = number.toString().replace(/[^0-9]/g, ''); // 숫자만 추출 (하이픈 제거)
-            // 네이버 배송조회 시스템 활용 (가장 안정적이며 즉시 조회 가능)
+            const cleanNumber = number.toString().replace(/[^0-9]/g, ''); 
             const naverUrl = `https://search.naver.com/search.naver?query=${encodeURIComponent(company)}+${cleanNumber}`;
             window.open(naverUrl, '_blank');
         }
@@ -310,10 +330,7 @@
                         let statusClass = 'status-ready';
                         if(status === '취소요청') statusClass = 'status-request';
                         if(status === '취소완료') statusClass = 'status-cancel';
-                        
                         const cancelBtn = (status === '주문접수') ? `<button onclick="handleCancelOrder('${o.주문시간}')" class="text-[9px] underline uppercase text-gray-400 hover:text-red-500 font-bold transition">Cancel Request</button>` : '';
-                        
-                        // 배송 정보 처리 (클릭 시 네이버 통합 조회 호출)
                         let deliveryDisplay = '';
                         if(o.택배사 && o.송장번호) {
                             deliveryDisplay = `
@@ -324,7 +341,6 @@
                                 </div>
                             `;
                         }
-
                         return `
                         <div class="border border-gray-100 p-6 space-y-4">
                             <div class="flex justify-between items-start">

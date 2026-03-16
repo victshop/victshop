@@ -310,13 +310,57 @@
 
         function renderCart() {
             const container = document.getElementById('cart-items');
-            if(cart.length === 0) { container.innerHTML = '<p class="text-center py-20 text-gray-400 text-[11px] font-bold">Cart is empty.</p>'; document.getElementById('cart-total').innerText = '0 KRW'; return; }
+            if(cart.length === 0) { 
+                container.innerHTML = '<p class="text-center py-20 text-gray-400 text-[11px] font-bold">Cart is empty.</p>'; 
+                document.getElementById('cart-total').innerText = '0 KRW'; 
+                return; 
+            }
             let total = 0;
             container.innerHTML = cart.map((item, idx) => {
                 total += (item.가격 * item.qty);
-                return `<div class="flex gap-6 items-center border-b border-gray-100 pb-6"><img src="${item.이미지URL}" class="w-20 h-20 object-cover"><div class="flex-1"><p class="text-[10px] font-black text-gray-400 uppercase">${item.브랜드}</p><h4 class="text-sm font-black">${item.상품명}</h4><div class="flex items-center gap-4 mt-2"><div class="flex border"><button onclick="updateCartQty(${idx},-1)" class="w-8 h-8">-</button><span class="w-8 text-center leading-8 text-xs font-bold">${item.qty}</span><button onclick="updateCartQty(${idx},1)" class="w-8 h-8">+</button></div><span class="text-xs font-black">${(item.가격*item.qty).toLocaleString()} KRW</span></div></div><button onclick="removeFromCart(${idx})" class="text-[10px] underline uppercase font-bold text-gray-400 hover:text-black transition">Remove</button></div>`;
+                return `
+                <div class="flex gap-6 items-center border-b border-gray-100 pb-6">
+                    <img src="${item.이미지URL}" class="w-20 h-20 object-cover">
+                    <div class="flex-1">
+                        <p class="text-[10px] font-black text-gray-400 uppercase">${item.브랜드}</p>
+                        <h4 class="text-sm font-black">${item.상품명}</h4>
+                        <div class="flex items-center gap-4 mt-2">
+                            <div class="flex border">
+                                <button onclick="updateCartQty(${idx},-1)" class="w-8 h-8">-</button>
+                                <input type="number" value="${item.qty}" oninput="handleCartQtyInput(${idx}, this)" 
+                                    class="w-12 text-center text-xs font-bold border-none focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
+                                <button onclick="updateCartQty(${idx},1)" class="w-8 h-8">+</button>
+                            </div>
+                            <span class="text-xs font-black">${(item.가격*item.qty).toLocaleString()} KRW</span>
+                        </div>
+                    </div>
+                    <button onclick="removeFromCart(${idx})" class="text-[10px] underline uppercase font-bold text-gray-400 hover:text-black transition">Remove</button>
+                </div>`;
             }).join('');
             document.getElementById('cart-total').innerText = total.toLocaleString() + ' KRW';
+        }
+
+        // --- 장바구니 수량 직접 입력 처리 함수 추가 ---
+        function handleCartQtyInput(idx, el) {
+            let val = parseInt(el.value);
+            if (isNaN(val) || val < 1) {
+                // 입력값이 없거나 1 미만이면 데이터를 1로 고정하지 않고 업데이트만 막거나 기본값 처리
+                cart[idx].qty = 1; 
+            } else {
+                cart[idx].qty = val;
+            }
+            localStorage.setItem('victshop_cart', JSON.stringify(cart));
+            
+            // 전체 합계 금액만 실시간 업데이트 (리스트 전체를 다시 그리면 포커스가 끊기므로 금액만 수정)
+            let total = 0;
+            cart.forEach(item => total += (item.가격 * item.qty));
+            document.getElementById('cart-total').innerText = total.toLocaleString() + ' KRW';
+            
+            // 각 아이템별 개별 합계 금액 표시 업데이트
+            const itemTotalPriceSpan = el.parentElement.nextElementSibling;
+            itemTotalPriceSpan.innerText = (cart[idx].가격 * cart[idx].qty).toLocaleString() + ' KRW';
+            
+            updateCartBadge();
         }
 
         function updateCartQty(idx, delta) { cart[idx].qty = Math.max(1, cart[idx].qty+delta); localStorage.setItem('victshop_cart', JSON.stringify(cart)); renderCart(); updateCartBadge(); }

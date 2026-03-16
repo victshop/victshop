@@ -397,47 +397,50 @@
             showView('checkout');
         }
 
-    async function submitOrder() {
-    if(!document.getElementById('chk-agree').checked) return alert('약관 동의가 필요합니다.');
-    
-    const btn = document.getElementById('final-submit-btn');
-    btn.disabled = true;
-    btn.innerText = 'PROCESSING...';
-    
-    const totalPrice = document.getElementById('chk-final-total').innerText.replace(/[^0-9]/g, '');
-    const productStr = orderType === 'single' ? `${currentProductObj.상품명} (${currentQty}개)` : cart.map(c => `${c.상품명} (${c.qty}개)`).join(', ');
-    
-    const finalData = { 
-        "상품명": productStr, 
-        "주문자명": document.getElementById('chk-orderer-name').value, 
-        "총금액": document.getElementById('chk-final-total').innerText,
-        "userId": currentUser.id 
-        // ... 기존 수령인 정보 동일
-    };
+ async function submitOrder() {
+        if(!document.getElementById('chk-agree').checked) return alert('약관 동의가 필요합니다.');
+        
+        const btn = document.getElementById('final-submit-btn');
+        btn.disabled = true;
+        btn.innerText = 'PROCESSING...';
+        
+        // 시트 전송용 데이터 구성
+        const finalData = { 
+            "상품명": orderType === 'single' ? `${currentProductObj.상품명} (${currentQty}개)` : cart.map(c => `${c.상품명} (${c.qty}개)`).join(', '), 
+            "주문자명": document.getElementById('chk-orderer-name').value, 
+            "주문자연락처": document.getElementById('chk-orderer-phone').value,
+            "수령인명": document.getElementById('chk-name').value,
+            "수령인연락처": document.getElementById('chk-phone').value,
+            "우편번호": document.getElementById('chk-postcode').value,
+            "기본주소": document.getElementById('chk-address').value,
+            "상세주소": document.getElementById('chk-address-detail').value,
+            "배송메세지": document.getElementById('chk-request').value,
+            "총금액": document.getElementById('chk-final-total').innerText,
+            "userId": currentUser.id 
+        };
 
-    // 1. 구글 시트에 주문 데이터 전송
-    await fetch(`${WEB_APP_URL}?action=addOrder&data=${encodeURIComponent(JSON.stringify(finalData))}`);
-    
-    if(orderType === 'cart') { cart = []; localStorage.removeItem('victshop_cart'); }
+        try {
+            // 1. 구글 시트에 주문 데이터 전송
+            const response = await fetch(`${WEB_APP_URL}?action=addOrder&data=${encodeURIComponent(JSON.stringify(finalData))}`);
+            
+            if(orderType === 'cart') {
+                cart = [];
+                localStorage.removeItem('victshop_cart');
+                updateCartBadge();
+            }
 
-    // 2. 결제 유도 안내창 띄우기 (토스 송금 링크 예시)
-    const tossId = "승조님의토스아이디"; // 여기에 본인 토스 아이디 입력
-    const tossUrl = `https://toss.me/${tossId}/${totalPrice}`;
+            // 2. 토스 기능 제거 및 완료 알림만 표시
+            alert('주문이 정상적으로 접수되었습니다.\n확인 후 연락드리겠습니다. 감사합니다!');
+            location.href = '#home'; // 홈으로 이동
+            location.reload();
 
-    const payMessage = `
-        주문이 정상적으로 접수되었습니다!\n\n
-        [결제 안내]\n
-        금액: ${totalPrice.toLocaleString()}원\n
-        아래 확인 버튼을 누르면 결제(송금) 화면으로 이동합니다.\n
-        입금 확인 후 배송이 시작됩니다.
-    `;
-
-    if(confirm(payMessage)) {
-        window.location.href = tossUrl; // 토스 앱으로 이동
-    } else {
-        location.reload(); // 그냥 창 닫기
+        } catch (error) {
+            console.error("주문 전송 오류:", error);
+            alert("주문 처리 중 오류가 발생했습니다. 다시 시도해 주세요.");
+            btn.disabled = false;
+            btn.innerText = 'Confirm Order';
+        }
     }
-}
 
         async function handleLogin() { 
             const id = document.getElementById('login-id').value;

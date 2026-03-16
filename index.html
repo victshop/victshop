@@ -82,7 +82,7 @@
                     <div class="flex items-center justify-between"><span class="text-xs font-bold text-gray-400 uppercase tracking-widest">Quantity</span>
                         <div class="flex items-center border border-gray-200">
                             <button onclick="changeQty(-1)" class="qty-btn hover:bg-gray-50">-</button>
-                            <input type="text" id="order-qty" value="1" readonly class="w-12 text-center text-sm font-bold">
+                            <input type="number" id="order-qty" value="1" oninput="handleQtyInput(this)" class="w-12 text-center text-sm font-bold [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
                             <button onclick="changeQty(1)" class="qty-btn hover:bg-gray-50">+</button>
                         </div>
                     </div>
@@ -280,7 +280,23 @@
         }
 
         function showMain() { showView('home'); }
-        function changeQty(val) { currentQty = Math.max(1, currentQty + val); document.getElementById('order-qty').value = currentQty; updateTotalPrice(); }
+        function changeQty(val) { 
+            currentQty = Math.max(1, currentQty + val); 
+            document.getElementById('order-qty').value = currentQty; 
+            updateTotalPrice(); 
+        }
+
+        // --- 새로 추가된 직접 입력 처리 함수 ---
+        function handleQtyInput(el) {
+            let val = parseInt(el.value);
+            if (isNaN(val) || val < 1) {
+                currentQty = 1; // 비어있거나 이상한 값이면 기본 1로 설정
+            } else {
+                currentQty = val;
+            }
+            updateTotalPrice();
+        }
+        // ------------------------------------
         function updateTotalPrice() { if(currentProductObj) document.getElementById('total-price-display').innerText = (currentProductObj.가격 * currentQty).toLocaleString() + ' KRW'; }
         function updateCartBadge() { document.getElementById('cart-count').innerText = cart.length; }
         
